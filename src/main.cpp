@@ -38,6 +38,16 @@ protected:
 		auto winSize = CCDirector::sharedDirector()->getWinSize();
 		this->setTitle("1-Key Chest Rewards");
 
+		auto iconListBG = CCScale9Sprite::create(
+			"square02b_001.png",
+			{ 0, 0, 80, 80 }
+		);
+		iconListBG->setOpacity(50);
+		iconListBG->setColor({ 0, 0, 0 });
+		iconListBG->setContentSize({400, 170});
+		iconListBG->setPosition({winSize.width / 2, winSize.height / 2 + 7.5f});
+		this->addChild(iconListBG);
+
 		//	For the Info Button at the top-right corner.
 		auto infoMenu = CCMenu::create();
 		infoMenu->setContentSize({420.f, 260.f});
@@ -231,6 +241,7 @@ protected:
 	template <typename T>
 	void addIcons(CCMenu *menu, UnlockType iconType, const T &iconId)
 	{
+		auto withoutCheckmark = Mod::get()->getSettingValue<bool>("disable-checkmark");
 		auto winSize = CCDirector::sharedDirector()->getWinSize();
 		auto gm = GameStatsManager::sharedState();
 
@@ -239,7 +250,7 @@ protected:
 			iconId);
 
 		//	If the Player has unlocked that icon, displays it with a Checkmark.
-		if (gm->isItemUnlocked(iconType, iconId))
+		if (gm->isItemUnlocked(iconType, iconId) && !withoutCheckmark)
 		{
 			iconSpr->changeToLockedState(0.0);
 
@@ -248,6 +259,12 @@ protected:
 			checkmark->setScale(0.75f);
 
 			iconSpr->addChild(checkmark);
+		} else if (iconType == UnlockType::Col1 || iconType == UnlockType::Col2){
+			auto text = (iconType == UnlockType::Col1) ? CCLabelBMFont::create("1", "bigFont.fnt") : CCLabelBMFont::create("2", "bigFont.fnt");
+			text->setPosition(iconSpr->getContentSize() / 2);
+			text->setScale(0.5f);
+			
+			iconSpr->addChild(text);
 		};
 
 		auto iconButton = CCMenuItemSpriteExtra::create(
@@ -265,6 +282,7 @@ protected:
 	template <typename T, typename... ARGS>
 	void addIcons(CCMenu *menu, UnlockType iconType, const T &iconId, const ARGS &...args)
 	{
+		auto withoutCheckmark = Mod::get()->getSettingValue<bool>("disable-checkmark");
 		auto winSize = CCDirector::sharedDirector()->getWinSize();
 		auto gm = GameStatsManager::sharedState();
 
@@ -272,7 +290,7 @@ protected:
 			iconType,
 			iconId);
 
-		if (gm->isItemUnlocked(iconType, iconId))
+		if (gm->isItemUnlocked(iconType, iconId) && !withoutCheckmark)
 		{
 			iconSpr->changeToLockedState(0.0);
 
@@ -281,6 +299,12 @@ protected:
 			checkmark->setScale(0.75f);
 
 			iconSpr->addChild(checkmark);
+		} else if (iconType == UnlockType::Col1 || iconType == UnlockType::Col2){
+			auto text = (iconType == UnlockType::Col1) ? CCLabelBMFont::create("1", "bigFont.fnt") : CCLabelBMFont::create("2", "bigFont.fnt");
+			text->setPosition(iconSpr->getContentSize() / 2);
+			text->setScale(0.5f);
+			
+			iconSpr->addChild(text);
 		};
 
 		auto iconButton = CCMenuItemSpriteExtra::create(
