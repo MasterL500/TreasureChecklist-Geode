@@ -1,6 +1,5 @@
 #pragma once
 #include <Geode/Geode.hpp>
-#include <Geode/bindings.hpp>
 #include <Geode/ui/Popup.hpp>
 
 using namespace geode::prelude;
