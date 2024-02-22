@@ -9,8 +9,6 @@ Displays a list of the Icon rewards you hace collected (or have yet to collect) 
 ### Additional Info
 First Geode mod, getting the hang of programming in GD. To report bugs, crashes or incompatibilities with other mods, create an issue on the Github Page found below.
 
-<cr>**WARNING:**</c> Android version might be unstable so proceed with care.
-
 ### Special Thanks
-Colon - For the JSON file that includes every treasure room chest.
-Geode - Documentation and tools to program on GD.
+* Colon - For the JSON file that includes every treasure room chest.
+* Geode - Documentation and tools to program on GD.

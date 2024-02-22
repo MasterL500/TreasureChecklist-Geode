@@ -1,6 +1,7 @@
 # v1.1.0
 
 * Added **"Group Rewards"** feature, applied to Tier II chests only.
+* Re-wrote code to enable Android support.
 * Fixed misplacement of one color.
 * Fixed some bugs.
 
