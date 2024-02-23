@@ -31,7 +31,7 @@ bool TreasureCheckAlert::setup() {
     //  Background for the Icon list
     auto iconListBG = CCScale9Sprite::create("square02b_001.png", {0, 0, 80, 80});
 		iconListBG->setColor({ 133, 68, 41 });
-		iconListBG->setContentSize({400, 170});
+		iconListBG->setContentSize({400, 165});
 		iconListBG->setPosition({winSize.width / 2, winSize.height / 2 + 7.5f});
 	this->addChild(iconListBG);
 
@@ -168,19 +168,30 @@ bool TreasureCheckAlert::setup() {
         addIcons(iconPage_6, 0xD, 4, 20, 35);
     } else {
         iconPage_4->setLayout(RowLayout::create()
-                ->setGap(12.0f)
+            ->setGap(14.0f)
                 ->setGrowCrossAxis(true)
-                ->setCrossAxisLineAlignment(AxisAlignment::Even));
+            ->setCrossAxisOverflow(false)
+            ->setCrossAxisLineAlignment(AxisAlignment::Even)
+        );
 
         iconPage_5->setLayout(RowLayout::create()
-            ->setGap(20.0f)
+            ->setGap(21.0f)
             ->setGrowCrossAxis(true)
-            ->setCrossAxisLineAlignment(AxisAlignment::Even));
+            ->setCrossAxisOverflow(false)
+            ->setCrossAxisAlignment(AxisAlignment::Center)
+            ->setCrossAxisLineAlignment(AxisAlignment::Even)
+        );
 
         iconPage_6->setLayout(RowLayout::create()
-            ->setGap(25.0f)
+            ->setGap(21.0f)
             ->setGrowCrossAxis(true)
-            ->setCrossAxisLineAlignment(AxisAlignment::Even));
+            ->setCrossAxisOverflow(false)
+            ->setCrossAxisAlignment(AxisAlignment::Center)
+            ->setCrossAxisLineAlignment(AxisAlignment::Even)
+        );
+
+        iconPage_5->setContentSize({440.f, 220.f});
+        iconPage_6->setContentSize({440.f, 220.f});
 
         //  Icon Rewards for the "25-Key" Chest (Grouped)
         if(showMiscRewards){
@@ -226,6 +237,8 @@ bool TreasureCheckAlert::setup() {
         addGroupedIcons(iconPage_5, 0x6, 142, 0x1, 264, 0x3, 95);
         addGroupedIcons(iconPage_5, 0x7, 96, 0x4, 85, 0x3, 97);
         addGroupedIcons(iconPage_5, 0x1, 301, 0x4, 135, 0x3, 44);
+        addGroupedIcons(iconPage_5, 0x7, 79, 0x1, 202, 0x3, 45);
+        addGroupedIcons(iconPage_5, 0x1, 261, 0x6, 143, 0x3, 46);
         addGroupedIcons(iconPage_5, 0x8, 36, 0x5, 115, 0x3, 48);
 		addGroupedIcons(iconPage_5, 0x9, 62, 0x1, 361, 0x3, 50);
 		addGroupedIcons(iconPage_5, 0x8, 50, 0x1, 393, 0x3, 55);
@@ -274,11 +287,12 @@ CCMenu* TreasureCheckAlert::createIconPage(int ID, bool isVisible){
     auto winSize = CCDirector::sharedDirector()->getWinSize();
     auto menu = CCMenu::create();
 
-    menu->setContentSize({500.f, 120.f});
+    menu->setContentSize({520.f, 220.f});
     menu->setID("icon-page-" + std::to_string(ID));
     menu->setLayout(RowLayout::create()
         ->setGap(13.0f)
         ->setGrowCrossAxis(true)
+        ->setCrossAxisOverflow(false)
         ->setCrossAxisLineAlignment(AxisAlignment::Even)
 	);
 
@@ -290,7 +304,7 @@ CCMenu* TreasureCheckAlert::createIconPage(int ID, bool isVisible){
 
     menu->setVisible(isVisible);
     menu->setPositionY(winSize.height / 2 + 7.5f);
-    menu->setScale(0.775f);
+    menu->setScale(0.75f);
     
     return menu;
 };
