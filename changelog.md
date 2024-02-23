@@ -1,6 +1,6 @@
 # v1.1.1
 
-* Fixed bugs and missing rewwards.
+* Fixed bugs and missing rewards.
 
 # v1.1.0
 

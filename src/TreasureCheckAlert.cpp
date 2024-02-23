@@ -1,14 +1,5 @@
 #include "TreasureCheckAlert.hpp"
 
-//	Offset for the Chest IDs
-enum chestTypeIDs{
-	chest05 = 1000,
-	chest10 = 2000,
-	chest25 = 3000,
-	chest50 = 4000,
-	chest100 = 5000
-};
-
 //	Icon Parameters (to create the info pop-up when pressed
 struct IconParameters : public CCObject{
 	UnlockType p_iconType;
@@ -30,9 +21,9 @@ bool TreasureCheckAlert::setup() {
 
     //  Background for the Icon list
     auto iconListBG = CCScale9Sprite::create("square02b_001.png", {0, 0, 80, 80});
-		iconListBG->setColor({ 133, 68, 41 });
-		iconListBG->setContentSize({400, 165});
-		iconListBG->setPosition({winSize.width / 2, winSize.height / 2 + 7.5f});
+    iconListBG->setColor({ 133, 68, 41 });
+    iconListBG->setContentSize({400, 165});
+    iconListBG->setPosition({winSize.width / 2, winSize.height / 2 + 7.5f});
 	this->addChild(iconListBG);
 
     //  Info Button menu
@@ -77,17 +68,16 @@ bool TreasureCheckAlert::setup() {
 
     /*  FOR REFERENCE
         - CUBE              = 0x1
+        - COL1 (MAIN)       = 0x2
+        - COL2 (SECOND)     = 0x3
         - SHIP              = 0x4
         - BALL              = 0x5
         - BIRD (UFO)        = 0x6
         - DART (WAVE)       = 0x7
         - ROBOT             = 0x8
         - SPIDER            = 0x9
-        - SWING             = 0xD
-
-        - COL1 (MAIN)       = 0x2
-        - COL2 (SECOND)     = 0x3
         - DEATH EFFECT      = 0xB
+        - SWING             = 0xD
     */
 
     //  Icon rewards for "1-Key" Chest
@@ -267,18 +257,16 @@ bool TreasureCheckAlert::setup() {
 };
 
 void TreasureCheckAlert::loadTreasureRoomInfo(){
-    CCDictionary* data = GameStatsManager::sharedState()->m_treasureRoomChests;
+    auto gm = GameStatsManager::sharedState();
 
-    CCDictElement* object;
-    CCDICT_FOREACH(data, object){
-        auto chestID = std::stoi(object->getStrKey());
+    for(auto ii = 0; ii < 6; ii++){
+        auto offset = 1000 * ii;
 
-        if(chestID < chestTypeIDs::chest05) m_chestCount[0]++;
-        else if(chestID < chestTypeIDs::chest10) m_chestCount[1]++;
-        else if(chestID < chestTypeIDs::chest25) m_chestCount[2]++;
-        else if(chestID < chestTypeIDs::chest50) m_chestCount[3]++;
-        else if(chestID < chestTypeIDs::chest100) m_chestCount[4]++;
-        else m_chestCount[5]++;
+        for(auto jj = 1; jj <= m_chestTotal[ii]; jj++){
+            if(gm->isSecretChestUnlocked(jj + offset)){
+                m_chestCount[ii]++;
+            }
+        }
     }
 };
 
@@ -458,8 +446,9 @@ void TreasureCheckAlert::createChestButton(CCMenu* menu, int tag, bool isActive)
         this,
         menu_selector(TreasureCheckAlert::onChestButton)
     );
-    button->setTag(tag);
+
     button->setID("chest-button-" + std::to_string(tag));
+    button->setTag(tag);
 
     menu->addChild(button);
     menu->updateLayout();
