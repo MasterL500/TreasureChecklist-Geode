@@ -9,6 +9,9 @@ class TreasureCheckAlert : public Popup<> {
         std::array<int, 6> m_chestTotal = {400, 100, 60, 24, 12, 8};
         std::array<int, 6> m_chestCount = {0, 0, 0, 0, 0, 0};
 
+        std::array<int, 6> m_iconsTotal = {0, 0, 0, 0, 0, 0};
+        std::array<int, 6> m_iconsCount = {0, 0, 0, 0, 0, 0};
+
         bool setup() override;
         void loadTreasureRoomInfo();
 

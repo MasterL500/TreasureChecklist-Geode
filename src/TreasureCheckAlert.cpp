@@ -81,7 +81,7 @@ bool TreasureCheckAlert::setup() {
     */
 
     //  Icon rewards for "1-Key" Chest
-    addIcons(iconPage_1, 0x1, 97, 163, 167, 176, 179, 189, 245, 249, 255, 278, 281, 282, 285, 287, 294, 302, 313, 333, 334, 335, 348, 350, 353, 373, 391, 414, 420, 426);
+    addIcons(iconPage_1, 0x1, 97, 163, 167, 176, 179, 189, 245, 249, 255, 278, 281, 282, 285, 287, 294, 302, 313, 333, 334, 335, 348, 350, 353, 373, 391, 414, 420, 426, 428);
     addIcons(iconPage_1, 0x4, 26, 69, 83);
     addIcons(iconPage_1, 0x5, 21);
     addIcons(iconPage_1, 0x6, 19, 118);
@@ -483,7 +483,7 @@ void TreasureCheckAlert::onInfoButton(CCObject * sender){
         "\n<co>25-Key Chests:</c> " + std::to_string(m_chestCount[3]) + " out of " + std::to_string(m_chestTotal[3]) +
         "\n<cr>50-Key Chests:</c> " + std::to_string(m_chestCount[4]) + " out of " + std::to_string(m_chestTotal[4]) +
         "\n<cp>100-Key Chests:</c> " + std::to_string(m_chestCount[5]) + " out of " + std::to_string(m_chestTotal[5]) +
-        "\n\nAmount of keys needed to full completion: " + std::to_string(totalKeys);
+        "\n\nKeys needed to 100%: " + std::to_string(totalKeys);
 
 	FLAlertLayer::create("Treasure Room Stats", info.c_str(), "OK")->show();
 };

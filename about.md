@@ -1,7 +1,8 @@
 # Treasure Checklist
-Displays a list of the Icon rewards you hace collected (or have yet to collect) from each type of Secret Chest in the Treasure Room.
+Displays a list of the Icon rewards you hace collected (or have yet to collect) from each type of Secret Chest in the Treasure Room. This mod is purely cosmetic.
 
 ### Options (settings)
+* Remove button from the Garage.
 * Show Miscellaneous rewards (Like colors or death effects).
 * Group the rewards of Tier II chests.
 * Disable checkmark.

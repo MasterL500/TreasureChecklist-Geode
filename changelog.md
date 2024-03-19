@@ -1,3 +1,8 @@
+# v1.1.2
+
+* Added **"Not in Garage"** feature.
+* Fixed missing rewards.
+
 # v1.1.1
 
 * Fixed bugs and missing rewards.
