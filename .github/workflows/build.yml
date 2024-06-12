@@ -1,0 +1,67 @@
+name: Build Binaries
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+    - "src/**"
+    - "Cargo.toml"
+    - "build.rs"
+    - ".github/workflows/build.yml"
+    branches: [ main ]
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+        - name: "Windows"
+          os: windows-latest
+          out_paths: './target/release/geode.exe'
+          static: ''
+          id: win
+
+        - name: "macOS"
+          os: macos-latest
+          out_paths: './target/release/geode'
+          static: 'export OPENSSL_STATIC=1'
+          id: mac
+
+        - name: "linux"
+          os: ubuntu-latest
+          out_paths: './target/release/geode'
+          # some stupid old ubuntu versions cant install libssl3
+          static: 'export OPENSSL_STATIC=1'
+          id: linux
+        
+    name: ${{ matrix.config.name }}
+    runs-on: ${{ matrix.config.os }}
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - uses: dtolnay/rust-toolchain@stable
+      with:
+        toolchain: stable
+        
+    - uses: Swatinem/rust-cache@v2
+      with:
+        key: ${{ matrix.config.name }}
+
+    - name: Build
+      run: |
+        ${{ matrix.config.static }}
+        cargo build --release
+    
+    - name: Move to output folder
+      shell: bash
+      run: |
+        mkdir ./out
+        mv ${{ matrix.config.out_paths }} ./out
+        
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: geode-cli-${{ matrix.config.id }}
+        path: ./out/
