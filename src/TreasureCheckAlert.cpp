@@ -5,6 +5,10 @@ struct IconParameters : public CCObject{
 	UnlockType p_iconType;
 	int p_iconId;
 
+	/// @brief 
+	/// @param icon 
+	/// @param id 
+
 	IconParameters(UnlockType icon, int id) : p_iconType(icon), p_iconId(id){
 		this->autorelease();
 	}
@@ -12,7 +16,7 @@ struct IconParameters : public CCObject{
 
 //  The set-up for the Mod's popup
 bool TreasureCheckAlert::setup() {
-    loadInfo();
+    //  loadInfo();
 
     auto winSize = CCDirector::sharedDirector()->getWinSize();
     this->setTitle("Rewards from 1x Key Chests");
@@ -39,7 +43,7 @@ bool TreasureCheckAlert::setup() {
     infoButton->setPosition(infoMenu->getContentSize() - 20.f);
     infoButton->setID("info-button");
     infoMenu->addChild(infoButton);
-    this->addChild(infoMenu);
+    //  this->addChild(infoMenu);
 
     //  Creates the menu that features buttons with the Chest sprites. (OPTIMIZED)
     auto pageMenu = CCMenu::create();
@@ -256,6 +260,7 @@ bool TreasureCheckAlert::setup() {
 void TreasureCheckAlert::loadInfo(){
     auto gm = GameStatsManager::sharedState();
 
+    /*
     for(auto ii = 0; ii < 6; ii++){
         auto offset = 1000 * ii;
 
@@ -265,6 +270,7 @@ void TreasureCheckAlert::loadInfo(){
             }
         }
     }
+    */
 };
 
 //	Creates the menu where every Icon is added as a button (That when pressed it displays the Info Pop-up of said Icon)
@@ -294,7 +300,7 @@ void TreasureCheckAlert::createPageButton(CCMenu* menu, int tag, bool isActive){
     auto sprName = "chest_0" + std::to_string(tag + 2) + "_02_001.png";
 
     auto button = CCMenuItemSpriteExtra::create(
-        IconSelectButtonSprite::createWithSpriteFrameName(sprName.c_str(), 2.0F, baseColor),
+        IconSelectButtonSprite::createWithSpriteFrameName(sprName.c_str(), 1.5F, baseColor),
         this,
         menu_selector(TreasureCheckAlert::onPageButton)
     );
@@ -475,7 +481,6 @@ void TreasureCheckAlert::onInfoButton(CCObject * sender){
         "\n<cr>50x Key Chests:</c> " + std::to_string(m_chestCount[4]) + " out of " + std::to_string(m_chestTotal[4]) +
         "\n<cp>100x Key Chests:</c> " + std::to_string(m_chestCount[5]) + " out of " + std::to_string(m_chestTotal[5]) +
         "\nKeys needed to 100%: " + std::to_string(totalKeys);
-
 	FLAlertLayer::create("Treasure Room Stats", info.c_str(), "OK")->show();
 };
 

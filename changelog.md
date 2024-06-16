@@ -1,19 +1,30 @@
-# v1.2.0
-* There's now a button in the Treasure Room (Where it should belong).
-* Added **"Not in Garage"** settings option.
-* Added missing 1-key reward.
+# v1.3.0-Beta.1 (Latest)
 
-# v1.1.1
-* Fixed bugs and missing rewards.
+* Updated to Geode v3.0.0 (Work in Progress).
+* Disabled info button (Code still to implement in Geode).
 
-# v1.1.0
-* Android Support.
-* Added **"Group Rewards"** settings option.
-* Fixed bugs and reward misplacement.
+## v1.2.0
 
-# v1.0.1
+* Added button inside the Treasure Room.
+* Added **"Not in Garage"** setting.
+* Added missing rewards.
+
+## v1.1.1
+
+* Added missing rewards.
+* Fixed bugs.
+
+## v1.1.0
+
+* Android support.
+* Added **"Group Rewards"** setting.
+* Fixed bugs and reward misplacements.
+
+## v1.0.1
+
 * First public version.
-* Added **"Disable Checkmark"** settings option.
+* Added **"Disable Checkmark"** setting.
 
-# v1.0.0
+## v1.0.0
+
 * Initial version.

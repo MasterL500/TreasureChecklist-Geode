@@ -41,7 +41,7 @@ class $modify(TreasureRoomLayer, SecretRewardsLayer){
 		if(!SecretRewardsLayer::init(p0)) return false;
 		auto winSize = CCDirector::sharedDirector()->getWinSize();
 
-		//	NodeIDs::provideFor(this);
+		NodeIDs::provideFor(this);
 
 		auto menu = CCMenu::create();
 		menu->setPosition({30.0f, 30.0f});
