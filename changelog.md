@@ -1,7 +1,7 @@
 # v1.3.0-Beta.1 (Latest)
 
-* Updated to Geode v3.0.0 (Work in Progress).
-* Disabled info button (Code still to implement in Geode).
+* Ported to Geode v3.0.0-beta.3
+* Disabled info button.
 
 ## v1.2.0
 
