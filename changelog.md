@@ -1,30 +1,33 @@
-# v1.3.0-Beta.3 (Latest)
+# Changelog
 
-* Ported to Geode v3.0.0-beta.3
-* Disabled info button.
+## <cg>v1.3.0-Beta.2</c> (Latest)
 
-## v1.2.0
+* <cy>Improved</c> changelog format
+* Some bugfixes
 
-* Added button inside the Treasure Room.
-* Added **"Not in Garage"** setting.
-* Added missing rewards.
+### <cb>v1.3.0-Beta.1</c>
 
-## v1.1.1
+* <cp>Ported mod to 2.206</c>
+* <cr>Temporally disabled</c> total amount info
 
-* Added missing rewards.
-* Fixed bugs.
+## <cb>v1.2.0</c>
 
-## v1.1.0
+* <cg>Added</c> info button in the Treasure Room
+* <cg>Added</c> setting to remove button from Icon Kit
+* <cy>Fixed</c> missing rewards
 
-* Android support.
-* Added **"Group Rewards"** setting.
-* Fixed bugs and reward misplacements.
+## <cb>v1.1.0</c>
 
-## v1.0.1
+* <cp>Android Support</c>
+* <cg>Added</c> setting to group Tier II rewards
+* <cy>Fixed</c> reward misplacements
+* More bugfixes
 
-* First public version.
-* Added **"Disable Checkmark"** setting.
+## <cb>v1.0.1</c>
 
-## v1.0.0
+* <cp>Public release</c>
+* <cg>Added</c> setting to disable the checkmark
 
-* Initial version.
+## <cb>v1.0.0</c>
+
+* <cp>Initial version</c>

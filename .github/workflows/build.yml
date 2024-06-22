@@ -32,7 +32,10 @@ jobs:
       - name: Build the mod
         uses: geode-sdk/build-geode-mod@main
         with:
+          sdk: 'nightly'
+          cli: 'v3.0.0-beta.1'
           combine: true
+          export-pdb: true
           target: ${{ matrix.config.target }}
 
   package:
@@ -46,5 +49,5 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: Build Output
+          name: Build Output (Treasure)
           path: ${{ steps.build.outputs.build-output }}
