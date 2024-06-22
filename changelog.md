@@ -1,9 +1,14 @@
 # Changelog
 
-## <cg>v1.3.0-Beta.1</c> (Latest)
+## <cg>v1.3.0-Beta.2</c> (Latest)
+
+* <cy>Improved</c> changelog format
+* Some bugfixes
+
+### <cb>v1.3.0-Beta.1</c>
 
 * <cp>Ported mod to 2.206</c>
-* <cr>Temporally disabled</c> info button where you get total chest amount
+* <cr>Temporally disabled</c> total amount info
 
 ## <cb>v1.2.0</c>
 
