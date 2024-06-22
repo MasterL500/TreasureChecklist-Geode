@@ -1,15 +1,18 @@
 {
-	"geode": "3.0.0-beta.3",
+	"geode": "3.0.0",
 	"gd": {
         "win": "2.206",
         "android": "2.206"
     },
-	"version": "v1.3.0-beta.3",
+	"version": "v1.3.0",
 	"id": "ml5.treasure-checklist",
 	"name": "Treasure Checklist",
 	"developer": "ML500",
 	"description": "Adds a checklist of your Treasure Room progress",
 	"repository": "https://github.com/MasterL500/TreasureChecklist-Geode",
+	"links": {
+        "community": "https://discord.gg/tFUyJw5"
+    },
 	"tags": ["interface", "utility", "enhancement"],
 	"dependencies": [
 		{
@@ -31,16 +34,16 @@
 			"type": "bool",
 			"default": true
 		},
+		"garage-button": {
+			"name": "Garage Button",
+			"description": "If you want the Mod's button in the Icon Kit (Garage). When disabled, you can open the mod from the Info button located in the Treasure Room",
+			"type":	"bool",
+			"default": true
+		},
 		"disable-checkmark": {
-			"name": "No Checkmark",
+			"name": "Remove Checkmark",
 			"description": "Icons aren't greyed out and displayed without checkmark. If you want to see the designs.",
 			"type": "bool",
-			"default": false
-		},
-		"remove-button": {
-			"name": "Not in Garage",
-			"description": "Removes the button from the Garage, so you can only see it in the Treasure Room.",
-			"type":	"bool",
 			"default": false
 		}
 	},
