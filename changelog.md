@@ -1,9 +1,17 @@
 # Changelog
 
-## <cg>v1.3.0-Beta.2</c> (Latest)
+## <cg>v1.3.0-Beta.5</c> (Latest)
+
+* <cy>Re-written</c> code, in attempts to reduce lag issues when loading Icon textures
+
+### <cg>v1.3.0-Beta.4</c>
 
 * <cy>Improved</c> changelog format
 * Some bugfixes
+
+### <cb>v1.3.0-Beta.3</c>
+* <co>Ported mod to Geode v3.0.0-beta.3</c>
+* *I am terrible at numbering so beta.2 didn't exist*
 
 ### <cb>v1.3.0-Beta.1</c>
 

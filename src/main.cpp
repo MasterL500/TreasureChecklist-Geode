@@ -1,7 +1,8 @@
 #include <Geode/Geode.hpp>
 #include <Geode/modify/GJGarageLayer.hpp>
 #include <Geode/modify/SecretRewardsLayer.hpp>
-#include "TreasureCheckAlert.hpp"
+#include <Geode/binding/AchievementBar.hpp>
+#include "TreasureListAlert.hpp"
 
 using namespace geode::prelude;
 
@@ -31,7 +32,7 @@ class $modify(GarageLayer, GJGarageLayer){
 	}
 
 	void onChestButton(CCObject *){
-		TreasureCheckAlert::create()->show();
+		TreasureListAlert::create()->show();
 	}
 };
 
@@ -61,6 +62,6 @@ class $modify(TreasureRoomLayer, SecretRewardsLayer){
 	}
 
 	void onChestButton(CCObject *){
-		TreasureCheckAlert::create()->show();
+		TreasureListAlert::create()->show();
 	}
 };
