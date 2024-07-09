@@ -4,7 +4,7 @@
 
 * <cy>Re-written</c> code, in attempts to reduce lag issues when loading Icon textures
 
-### <cg>v1.3.0-Beta.4</c>
+### <cb>v1.3.0-Beta.4</c>
 
 * <cy>Improved</c> changelog format
 * Some bugfixes
