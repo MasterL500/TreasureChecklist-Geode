@@ -1,6 +1,10 @@
 # Changelog
 
-## <cg>v1.3.0-Beta.4</c> (Latest)
+## <cg>v1.3.0-Beta.5</c> (Latest)
+
+* <cy>Re-written</c> code, in attempts to reduce lag issues when loading Icon textures
+
+### <cb>v1.3.0-Beta.4</c>
 
 * <cy>Improved</c> changelog format
 * Some bugfixes
