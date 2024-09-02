@@ -1,6 +1,6 @@
 # Treasure Checklist
 
-Displays a list of the Icon rewards you hace collected (or have yet to collect) from each type of Secret Chest in the Treasure Room. This mod is purely cosmetic.
+Displays a list of the Icon rewards you have collected (or have yet to collect) from each type of Secret Chest in the Treasure Room. This mod is purely cosmetic.
 
 ## Options
 
