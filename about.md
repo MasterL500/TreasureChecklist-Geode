@@ -1,19 +1,22 @@
 # Treasure Checklist
 
-Displays a list of the Icon rewards you hace collected (or have yet to collect) from each type of Secret Chest in the Treasure Room. This mod is purely cosmetic.
+Displays all the rewards you have collected (or left to collect) from every type of Secret chest located in the Treasure Room.
 
 ## Options
 
-* Remove button from the Garage.
-* Show Miscellaneous rewards (Like colors or death effects).
-* Group the rewards of Tier II chests.
-* Disable checkmark.
+- Remove button from the Icon kit.
+- Show rewards like Colors and Death effects.
+- Group the Tier II chest rewards.
+- Disable checkmark.
+- Display the Golden key chests. (Experimental)
 
-## Contact Info
+## Contact
 
-First Geode mod, getting the hang of programming in GD. To report bugs, crashes or issues with other mods, you can contact me through [Geode's Discord](https://discord.gg/9e43WMKzhp), [My Discord server](https://discord.gg/tFUyJw5) or creating a Github Issue.
+First Geode mod, getting the hang of programming in GD. To report bugs, crashes or issues with other mods, you can contact me through [Geode's Discord](https://discord.gg/9e43WMKzhp), [My Discord server](https://discord.gg/tFUyJw5) or creating a GitHub Issue.
 
 ## Special Thanks
 
-* **Colon** - For extracting the data about the Treasure Room.
-* **Geode** - Documentation and the tools to program in GD.
+- **Colon**: For extracting the data about the Treasure Room.
+- **Geode**: Documentation and tools to program in GD.
+- **GDP Server**: For the reference information.
+- **Master's World**: For support on this mod.
