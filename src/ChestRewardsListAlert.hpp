@@ -4,11 +4,13 @@
 
 using namespace geode::prelude;
 
-class TreasureListAlert : public Popup<> {
+class ChestRewardsListAlert : public Popup<> {
     protected:
         size_t m_currentPage = 1;
-        std::array<int, 6> m_chestTotal = {400, 100, 60, 24, 12, 8};
-        std::array<int, 6> m_chestCount = {0, 0, 0, 0, 0, 0};
+        size_t m_totalPages = 7;
+
+        std::array<int, 7> m_chestTotal = {400, 100, 60, 24, 12, 8, 20};
+        std::array<int, 7> m_chestCount = {0, 0, 0, 0, 0, 0, 0};
 
         bool setup() override;
 
@@ -18,13 +20,13 @@ class TreasureListAlert : public Popup<> {
         void createNavButton(CCMenu *, int, bool);
         void createIconPage(int, int);
 
-        void onNavButton(CCObject *);
         void onPageButton(CCObject *);
+        void onNavButton(CCObject *);
 
         void loadData();
 
     public:
-        static TreasureListAlert * create();
+        static ChestRewardsListAlert * create();
         void onIcon(CCObject *);
 
 };

@@ -2,7 +2,7 @@
 #include <Geode/modify/GJGarageLayer.hpp>
 #include <Geode/modify/SecretRewardsLayer.hpp>
 #include <Geode/binding/AchievementBar.hpp>
-#include "TreasureListAlert.hpp"
+#include "ChestRewardsListAlert.hpp"
 
 using namespace geode::prelude;
 
@@ -32,7 +32,7 @@ class $modify(GarageLayer, GJGarageLayer){
 	}
 
 	void onChestButton(CCObject *){
-		TreasureListAlert::create()->show();
+		ChestRewardsListAlert::create()->show();
 	}
 };
 
@@ -41,8 +41,6 @@ class $modify(TreasureRoomLayer, SecretRewardsLayer){
 	bool init(bool p0){
 		if(!SecretRewardsLayer::init(p0)) return false;
 		auto winSize = CCDirector::sharedDirector()->getWinSize();
-
-		NodeIDs::provideFor(this);
 
 		auto menu = CCMenu::create();
 		menu->setPosition({30.0f, 30.0f});
@@ -62,6 +60,6 @@ class $modify(TreasureRoomLayer, SecretRewardsLayer){
 	}
 
 	void onChestButton(CCObject *){
-		TreasureListAlert::create()->show();
+		ChestRewardsListAlert::create()->show();
 	}
 };

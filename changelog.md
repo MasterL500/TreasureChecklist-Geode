@@ -1,6 +1,12 @@
 # Changelog
 
-## <cg>v1.3.0-Beta.5</c> (Latest)
+## <cg>v1.4.0-Alpha.1</c> (Latest)
+
+* <cp>Ported mod to 2.207</c>
+* <cg>Added</c> Gold key chest rewards
+* <cg>Added</c> setting to display them (Disabled by default)
+
+### <cb>v1.3.0-Beta.5</c>
 
 * <cy>Re-written</c> code, in attempts to reduce lag issues when loading Icon textures
 
@@ -10,6 +16,7 @@
 * Some bugfixes
 
 ### <cb>v1.3.0-Beta.3</c>
+
 * <co>Ported mod to Geode v3.0.0-beta.3</c>
 * *I am terrible at numbering so beta.2 didn't exist*
 

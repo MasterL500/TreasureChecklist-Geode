@@ -1,19 +1,18 @@
 {
-	"geode": "3.2.0",
+	"geode": "4.0.0-alpha.1",
+	"version": "v1.4.0-alpha.1",
 	"gd": {
-        "win": "2.206",
-        "android": "2.206"
+        "win": "2.2074",
+		"android": "2.2074"
     },
-	"version": "v1.3.0-beta.5",
 	"id": "ml5.treasure-checklist",
 	"name": "Treasure Checklist",
-	"developer": "ML500",
-	"description": "Adds a checklist of your Treasure Room progress",
-	"repository": "https://github.com/MasterL500/TreasureChecklist-Geode",
+	"developers": ["ML500"],
+	"description": "Do you have the icon you wanted?",
 	"links": {
+		"source": "https://github.com/MasterL500/TreasureChecklist-Geode",
         "community": "https://discord.gg/tFUyJw5"
     },
-	"tags": ["interface", "utility", "enhancement"],
 	"dependencies": [
 		{
 			"id": "geode.node-ids",
@@ -23,27 +22,37 @@
 	],
 	"settings": {
 		"misc-rewards": {
-			"name": "Misc. rewards",
-			"description": "Displays Color and Death effects in the checklist.",
 			"type": "bool",
+			"name": "Miscellaneous rewards",
+			"description": "Displays Colors and Death effects",
 			"default": true
 		},
 		"group-by-chest": {
-			"name": "Group by Chests",
-			"description": "Tier II rewards are grouped by chest instead of being displayed separately.",
 			"type": "bool",
-			"default": true
-		},
-		"garage-button": {
-			"name": "Garage Button",
-			"description": "If you want the Mod's button in the Icon Kit (Garage). When disabled, you can open the mod from the Info button located in the Treasure Room",
-			"type":	"bool",
+			"name": "Group Tier II Chests",
+			"description": "<cg>Tier II</c> rewards are grouped by chest instead of being displayed separately",
 			"default": true
 		},
 		"disable-checkmark": {
-			"name": "Remove Checkmark",
-			"description": "Icons aren't greyed out and displayed without checkmark. If you want to see the designs.",
 			"type": "bool",
+			"name": "Remove Checkmark",
+			"description": "Icons aren't greyed out and displayed without checkmark. If you want to see the designs",
+			"default": false
+		},
+		"garage-button": {
+			"type": "bool",
+			"name": "Garage Button",
+			"description": "If you want the mod's button in the Icon kit",
+			"default": true
+		},
+		"experimental-segment":{
+			"type": "title",
+			"name": "Experimental features"
+		},
+		"display-gold-chests": {
+			"type": "bool",
+			"name": "Gold Key Chests",
+			"description": "Adds a 7th page for <cy>Golden Key</c> chests. Currently there's <cr>no way to obtain those keys</c>. This only serves to see what Icons you can get",
 			"default": false
 		}
 	},
@@ -51,5 +60,6 @@
 		"sprites": [
 			"resources/*.png"
 		]
-	}
+	},
+	"tags": ["interface", "utility", "enhancement", "offline"]
 }
