@@ -1,6 +1,6 @@
 # Changelog
 
-## <cg>v1.4.0-Alpha.1</c> (Latest)
+## <cg>v1.4.0-Beta.1</c> (Latest)
 
 * <cp>Ported mod to 2.207</c>
 * <cg>Added</c> Gold key chest rewards
