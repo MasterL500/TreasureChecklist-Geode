@@ -1,8 +1,7 @@
 #include <Geode/Geode.hpp>
 #include <Geode/modify/GJGarageLayer.hpp>
 #include <Geode/modify/SecretRewardsLayer.hpp>
-#include <Geode/binding/AchievementBar.hpp>
-#include "ChestRewardsListAlert.hpp"
+#include "SecretRewardsListAlert.hpp"
 
 using namespace geode::prelude;
 
@@ -32,7 +31,7 @@ class $modify(GarageLayer, GJGarageLayer){
 	}
 
 	void onChestButton(CCObject *){
-		ChestRewardsListAlert::create()->show();
+		SecretRewardsListAlert::create()->show();
 	}
 };
 
@@ -48,7 +47,7 @@ class $modify(TreasureRoomLayer, SecretRewardsLayer){
 		menu->setZOrder(5);
 		
 		auto button = CCMenuItemSpriteExtra::create(
-			CCSprite::create("ModInfoIcon.png"_spr),
+			CCSprite::create("TC_ModInfoIcon.png"_spr),
 			this,
 			menu_selector(TreasureRoomLayer::onChestButton));
 		button->setID("Treasure-Checklist-Button");
@@ -60,6 +59,6 @@ class $modify(TreasureRoomLayer, SecretRewardsLayer){
 	}
 
 	void onChestButton(CCObject *){
-		ChestRewardsListAlert::create()->show();
+		SecretRewardsListAlert::create()->show();
 	}
 };

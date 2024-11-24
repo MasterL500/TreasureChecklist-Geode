@@ -1,18 +1,20 @@
 {
-	"geode": "4.0.0-beta.1",
-	"version": "v1.4.0",
+	"geode": "4.0.1",
+	"version": "v1.5.0",
 	"gd": {
-        "win": "2.2074",
+		"win": "2.2074",
 		"android": "2.2074"
-    },
+	},
 	"id": "ml5.treasure-checklist",
 	"name": "Treasure Checklist",
-	"developers": ["ML500"],
-	"description": "Do you have the icon you wanted?",
+	"developers": [
+		"ML500"
+	],
+	"description": "Do you have the icon that you wanted?",
 	"links": {
 		"source": "https://github.com/MasterL500/TreasureChecklist-Geode",
-        "community": "https://discord.gg/tFUyJw5"
-    },
+		"community": "https://discord.gg/tFUyJw5"
+	},
 	"dependencies": [
 		{
 			"id": "geode.node-ids",
@@ -23,36 +25,41 @@
 	"settings": {
 		"misc-rewards": {
 			"type": "bool",
-			"name": "Miscellaneous rewards",
-			"description": "Displays Colors and Death effects",
+			"name": "Misc. Rewards",
+			"description": "Displays <cy>colors</c> and <co>death effects</c>.",
 			"default": true
 		},
-		"group-by-chest": {
+		"group-chests": {
 			"type": "bool",
-			"name": "Group Tier II Chests",
-			"description": "<cg>Tier II</c> rewards are grouped by chest instead of being displayed separately",
+			"name": "Group Tier II Rewards",
+			"description": "Rewards from <cg>Tier II Chests</c> (25, 50 and 100 Keys) are grouped together.",
+			"default": true
+		},
+		"sorted-rewards": {
+			"type": "bool",
+			"name": "Sort Golden Key rewards",
+			"description": "Displays the rewards from <cy>Golden Key Chests</c> in their settled order.",
 			"default": true
 		},
 		"disable-checkmark": {
 			"type": "bool",
-			"name": "Remove Checkmark",
-			"description": "Icons aren't greyed out and displayed without checkmark. If you want to see the designs",
-			"default": false
+			"name": "Checkmark Items",
+			"description": "Disabling this allows the Icons to be displayed without the checkmark. If you want to see the designs.",
+			"default": true
 		},
 		"garage-button": {
 			"type": "bool",
-			"name": "Garage Button",
-			"description": "If you want the mod's button in the Icon kit",
+			"name": "Icon Kit Button",
 			"default": true
 		},
-		"experimental-segment":{
+		"experimental-segment": {
 			"type": "title",
-			"name": "Experimental features"
+			"name": "Other features"
 		},
-		"display-gold-chests": {
+		"wraith-page": {
 			"type": "bool",
-			"name": "Gold Key Chests",
-			"description": "Adds a 7th page for <cy>Golden Key</c> chests. Currently there's <cr>no way to obtain those keys</c>. This only serves to see what Icons you can get",
+			"name": "Wraith's Rewards",
+			"description": "Adds a page with the Special Chest rewards from the 4th Vault (<cp>The Wraith</c>).",
 			"default": false
 		}
 	},
@@ -61,5 +68,10 @@
 			"resources/*.png"
 		]
 	},
-	"tags": ["interface", "utility", "enhancement", "offline"]
+	"tags": [
+		"interface",
+		"utility",
+		"enhancement",
+		"offline"
+	]
 }
