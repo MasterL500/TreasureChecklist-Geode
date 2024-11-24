@@ -1,7 +1,6 @@
 #include <Geode/Geode.hpp>
 #include <Geode/modify/GJGarageLayer.hpp>
 #include <Geode/modify/SecretRewardsLayer.hpp>
-#include <Geode/binding/AchievementBar.hpp>
 #include "SecretRewardsListAlert.hpp"
 
 using namespace geode::prelude;
