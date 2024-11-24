@@ -1,4 +1,5 @@
-#include "ChestRewardsListAlert.hpp"
+#include "SecretRewardsListAlert.hpp"
+#include "SecretRewardsData.hpp"
 
 //  Structure for Icons
 struct IconParameters : public CCObject
@@ -17,10 +18,11 @@ struct IconParameters : public CCObject
     }
 };
 
-bool ChestRewardsListAlert::setup()
+bool SecretRewardsListAlert::setup()
 {
     auto winSize = CCDirector::sharedDirector()->getWinSize();
-    auto showGoldPage = Mod::get()->getSettingValue<bool>("display-gold-chests");
+    auto showWraith = Mod::get()->getSettingValue<bool>("wraith-page");
+    loadData();
 
     //  Background for the Icon Lists
     auto iconListBG = CCScale9Sprite::create("square02b_001.png", {0, 0, 80, 80});
@@ -34,18 +36,17 @@ bool ChestRewardsListAlert::setup()
     infoMenu->setContentSize({405.f, 215.f});
     infoMenu->ignoreAnchorPointForPosition(false);
     infoMenu->setID("info-menu");
+    this->addChild(infoMenu);
 
     //  Info Button (Itself)
     auto infoButton = CCMenuItemSpriteExtra::create(
         CCSprite::createWithSpriteFrameName("GJ_infoIcon_001.png"),
         this,
-        nullptr // menu_selector(ChestRewardsListAlert::onInfoButton)
-    );
+        menu_selector(SecretRewardsListAlert::onInfo));
 
     infoButton->setPosition(infoMenu->getContentSize());
     infoButton->setID("info-button");
     infoMenu->addChild(infoButton);
-    //  this->addChild(infoMenu);
 
     //  Navigation Menu
     auto navMenu = CCMenu::create();
@@ -55,8 +56,17 @@ bool ChestRewardsListAlert::setup()
     navMenu->setID("navigation-menu");
     this->addChild(navMenu);
 
+    //  Settings Button (Itself)
+    auto settingsButton = CCMenuItemSpriteExtra::create(
+        IconSelectButtonSprite::createWithSpriteFrameName("geode.loader/settings.png", 1.25f),
+        this,
+        menu_selector(SecretRewardsListAlert::onSettings));
+
+    settingsButton->setID("settings-button");
+    navMenu->addChild(settingsButton);
+
     //  Navigation Menu (Buttons)
-    for (int ii = 1; ii <= m_totalPages - !showGoldPage; ii++)
+    for (int ii = 1; ii <= m_totalPages - !showWraith; ii++)
     {
         createNavButton(navMenu, ii, ii == 1);
     };
@@ -74,7 +84,7 @@ bool ChestRewardsListAlert::setup()
     auto prevBtn = CCMenuItemSpriteExtra::create(
         CCSprite::createWithSpriteFrameName("GJ_arrow_01_001.png"),
         this,
-        nullptr // menu_selector(ChestRewardsListAlert::onPageButton)
+        nullptr // menu_selector(SecretRewardsListAlert::onPageButton)
     );
 
     prevBtn->setID("arrow-prev-button");
@@ -86,7 +96,7 @@ bool ChestRewardsListAlert::setup()
     auto nextBtn = CCMenuItemSpriteExtra::create(
         nextSpr,
         this,
-        nullptr // menu_selector(ChestRewardsListAlert::onPageButton)
+        nullptr // menu_selector(SecretRewardsListAlert::onPageButton)
     );
 
     nextBtn->setID("arrow-next-button");
@@ -118,16 +128,32 @@ bool ChestRewardsListAlert::setup()
 
     this->m_noElasticity = true;
     this->setTitle("Rewards (1 Key chests)");
+    this->setID("treasure-checklist-popup");
     return true;
 };
 
-void ChestRewardsListAlert::createIconPage(int ID, int index)
+void SecretRewardsListAlert::loadData()
+{
+    auto gsm = GameStatsManager::sharedState();
+
+    for (
+        auto ii = SecretRewardsData.begin(); ii != SecretRewardsData.end(); ii++)
+    {
+        if (gsm->isItemUnlocked(UnlockType{ii->at(1)}, ii->at(2)))
+        {
+            m_chestCount[ii->at(0)]++;
+        }
+    }
+}
+
+void SecretRewardsListAlert::createIconPage(int ID, int index)
 {
     auto menu = this->getChildByID("icon-menu");
     auto iconMenu = static_cast<CCMenu *>(menu);
 
     auto showMiscRewards = Mod::get()->getSettingValue<bool>("misc-rewards");
-    auto groupRewards = Mod::get()->getSettingValue<bool>("group-by-chest");
+    auto orderRewards = Mod::get()->getSettingValue<bool>("sorted-rewards");
+    auto groupRewards = Mod::get()->getSettingValue<bool>("group-chests");
 
     iconMenu->removeAllChildren();
     iconMenu->updateLayout();
@@ -336,18 +362,70 @@ void ChestRewardsListAlert::createIconPage(int ID, int index)
         break;
 
     case 7:
-        createItem(iconMenu, 0x1, {157, 170, 183, 258, 283, 357});
-        createItem(iconMenu, 0x4, {133, 139, 147, 165});
-        createItem(iconMenu, 0x5, {74, 100});
-        createItem(iconMenu, 0x6, {43, 66});
-        createItem(iconMenu, 0x7, {88, 95});
-        createItem(iconMenu, 0x9, {31, 33});
-        createItem(iconMenu, 0xD, {5, 24});
+
+        if (orderRewards)
+        {
+            iconMenu->setLayout(RowLayout::create()
+                                    ->setGap(25.0f)
+                                    ->setAutoScale(false)
+                                    ->setGrowCrossAxis(true)
+                                    ->setCrossAxisOverflow(false)
+                                    ->setCrossAxisAlignment(AxisAlignment::Center)
+                                    ->setCrossAxisLineAlignment(AxisAlignment::Even));
+            iconMenu->setContentSize({480.f, 220.f});
+
+            createItemLabeled(iconMenu, {0x1, 157}, "1st");
+            createItemLabeled(iconMenu, {0x4, 133}, "2nd");
+            createItemLabeled(iconMenu, {0x1, 170}, "3rd");
+            createItemLabeled(iconMenu, {0x4, 165}, "4th");
+
+            createItemLabeled(iconMenu, {0xD, 5}, "5th");
+            createItemLabeled(iconMenu, {0x1, 183}, "6th");
+            createItemLabeled(iconMenu, {0x7, 95}, "7th");
+            createItemLabeled(iconMenu, {0x1, 258}, "8th");
+
+            createItemLabeled(iconMenu, {0x5, 100}, "9th");
+            createItemLabeled(iconMenu, {0x6, 43}, "10th");
+            createItemLabeled(iconMenu, {0x1, 357}, "11th");
+            createItemLabeled(iconMenu, {0xD, 24}, "12th");
+
+            createItemLabeled(iconMenu, {0x9, 33}, "13th");
+            createItemLabeled(iconMenu, {0x4, 139}, "14th");
+            createItemLabeled(iconMenu, {0x1, 283}, "15th");
+            createItemLabeled(iconMenu, {0x7, 88}, "16th");
+
+            createItemLabeled(iconMenu, {0x5, 74}, "17th");
+            createItemLabeled(iconMenu, {0x4, 147}, "18th");
+            createItemLabeled(iconMenu, {0x6, 66}, "19th");
+            createItemLabeled(iconMenu, {0x9, 31}, "20th");
+        }
+        else
+        {
+            createItem(iconMenu, 0x1, {157, 170, 183, 258, 283, 357});
+            createItem(iconMenu, 0x4, {133, 139, 147, 165});
+            createItem(iconMenu, 0x5, {74, 100});
+            createItem(iconMenu, 0x6, {43, 66});
+            createItem(iconMenu, 0x7, {88, 95});
+            createItem(iconMenu, 0x9, {31, 33});
+            createItem(iconMenu, 0xD, {5, 24});
+        }
+        break;
+
+    case 8:
+        createItem(iconMenu, 0x1, {210, 231, 309, 343, 390, 409, 440, 445, 485});
+        createItem(iconMenu, 0x4, {121, 146, 155, 158});
+        createItem(iconMenu, 0x5, {63, 90, 91, 114});
+        createItem(iconMenu, 0x6, {63, 116, 138, 147});
+        createItem(iconMenu, 0x7, {44, 55, 83, 92});
+        createItem(iconMenu, 0x8, {37});
+        createItem(iconMenu, 0x9, {40});
+        createItem(iconMenu, 0xD, {17});
+        createItem(iconMenu, 0xE, {6, 8});
         break;
     }
 };
 
-void ChestRewardsListAlert::createNavButton(CCMenu *menu, int tag, bool active)
+void SecretRewardsListAlert::createNavButton(CCMenu *menu, int tag, bool active)
 {
     //  Sprite based on the tag of the button
     auto sprName = (tag == 1)   ? "chest_03_02_001.png"
@@ -356,18 +434,21 @@ void ChestRewardsListAlert::createNavButton(CCMenu *menu, int tag, bool active)
                    : (tag == 4) ? "chest_06_02_001.png"
                    : (tag == 5) ? "chest_07_02_001.png"
                    : (tag == 6) ? "chest_08_02_001.png"
-                                : "chest_09_02_001.png";
+                   : (tag == 7) ? "chest_09_02_001.png"
+                                : "GJ_secretLock4_001.png";
 
     //  Base color based on whenever the current page is on
     auto baseColor = (active) ? IconSelectBaseColor::Selected : IconSelectBaseColor::Unselected;
-
     auto buttonSpr = IconSelectButtonSprite::createWithSpriteFrameName(sprName, 1.25F, baseColor);
+
+    if (tag == 8)
+        buttonSpr = IconSelectButtonSprite::createWithSprite("TC_WraithIcon.png"_spr, 1.25F, baseColor);
 
     //  Button
     auto button = CCMenuItemSpriteExtra::create(
         buttonSpr,
         this,
-        menu_selector(ChestRewardsListAlert::onNavButton));
+        menu_selector(SecretRewardsListAlert::onNavButton));
 
     //  Adds ID and Tag
     button->setID("chest-button-" + std::to_string(tag));
@@ -379,29 +460,38 @@ void ChestRewardsListAlert::createNavButton(CCMenu *menu, int tag, bool active)
 };
 
 //  When a Navigation button was pressed
-void ChestRewardsListAlert::onNavButton(CCObject *sender)
+void SecretRewardsListAlert::onNavButton(CCObject *sender)
 {
-    auto showGoldPage = Mod::get()->getSettingValue<bool>("display-gold-chests");
+    auto showWraith = Mod::get()->getSettingValue<bool>("wraith-page");
     auto menu = this->getChildByID("navigation-menu");
     auto navMenu = static_cast<CCMenu *>(menu);
     auto tag = sender->getTag();
 
-    m_currentPage = tag;
+    m_page = tag;
 
-    auto shopTitle = (tag == 1) ? "Rewards (1 Key chests)"
-                    : (tag == 2) ? "Rewards (5 Key chests)"
-                    : (tag == 3) ? "Rewards (10 Key chests)"
-                    : (tag == 4) ? "Rewards (25 Key chests)"
-                    : (tag == 5) ? "Rewards (50 Key chests)"
-                    : (tag == 6) ? "Rewards (100 Key chests)"
-                                : "Rewards (Golden Key chests)";
+    auto shopTitle = (tag == 1)   ? "Rewards (1 Key chests)"
+                     : (tag == 2) ? "Rewards (5 Key chests)"
+                     : (tag == 3) ? "Rewards (10 Key chests)"
+                     : (tag == 4) ? "Rewards (25 Key chests)"
+                     : (tag == 5) ? "Rewards (50 Key chests)"
+                     : (tag == 6) ? "Rewards (100 Key chests)"
+                     : (tag == 7) ? "Rewards (Golden Key chests)"
+                                  : "Rewards (Wraith's Vault)";
 
     this->setTitle(shopTitle);
 
     navMenu->removeAllChildren();
     navMenu->updateLayout();
 
-    for (int ii = 1; ii <= m_totalPages - !showGoldPage; ii++)
+    auto settingsButton = CCMenuItemSpriteExtra::create(
+        IconSelectButtonSprite::createWithSpriteFrameName("geode.loader/settings.png", 1.25f),
+        this,
+        menu_selector(SecretRewardsListAlert::onSettings));
+
+    settingsButton->setID("settings-button");
+    navMenu->addChild(settingsButton);
+
+    for (int ii = 1; ii <= m_totalPages - !showWraith; ii++)
     {
         createNavButton(navMenu, ii, tag == ii);
     };
@@ -424,7 +514,7 @@ void ChestRewardsListAlert::onNavButton(CCObject *sender)
 
 /*
 //  When the Arrow buttons are pressed (FOR THE FUTURE)
-void ChestRewardsListAlert::onPageButton(CCObject * sender){
+void SecretRewardsListAlert::onPageButton(CCObject * sender){
     auto tag = sender->getTag();
 
     auto pageMenu = this->getChildByID("page-menu");
@@ -439,14 +529,14 @@ void ChestRewardsListAlert::onPageButton(CCObject * sender){
     iconMenu->removeAllChildren();
     iconMenu->updateLayout();
 
-    createIconPage(m_currentPage, tag);
+    createIconPage(m_page, tag);
 };*/
 
-void ChestRewardsListAlert::createItem(CCMenu *menu, int gamemode, std::vector<int> icons)
+void SecretRewardsListAlert::createItem(CCMenu *menu, int gamemode, std::vector<int> icons)
 {
     for (auto const &iconID : icons)
     {
-        auto noCheckmark = Mod::get()->getSettingValue<bool>("disable-checkmark");
+        auto checkmark = Mod::get()->getSettingValue<bool>("disable-checkmark");
         auto gsm = GameStatsManager::sharedState();
         UnlockType iconType{gamemode};
 
@@ -454,7 +544,7 @@ void ChestRewardsListAlert::createItem(CCMenu *menu, int gamemode, std::vector<i
             iconType,
             iconID);
 
-        if (gsm->isItemUnlocked(iconType, iconID) && !noCheckmark)
+        if (gsm->isItemUnlocked(iconType, iconID) && checkmark)
         {
             auto checkmark = CCSprite::createWithSpriteFrameName("GJ_completesIcon_001.png");
             checkmark->setPosition(iconSpr->getContentSize() / 2);
@@ -479,7 +569,7 @@ void ChestRewardsListAlert::createItem(CCMenu *menu, int gamemode, std::vector<i
         auto iconButton = CCMenuItemSpriteExtra::create(
             iconSpr,
             this,
-            menu_selector(ChestRewardsListAlert::onIcon));
+            menu_selector(SecretRewardsListAlert::onIcon));
 
         //	Passes the user-defined IconParameters for its callback
         iconButton->setUserObject(new IconParameters(gamemode, iconID, menu->getTag()));
@@ -489,7 +579,64 @@ void ChestRewardsListAlert::createItem(CCMenu *menu, int gamemode, std::vector<i
     }
 }
 
-void ChestRewardsListAlert::createItemGroup(CCMenu *menu, std::map<int, int> icons)
+void SecretRewardsListAlert::createItemLabeled(CCMenu *menu, std::pair<int, int> icon, const char *label)
+{
+    auto checkmark = Mod::get()->getSettingValue<bool>("disable-checkmark");
+    auto gsm = GameStatsManager::sharedState();
+    UnlockType iconType{icon.first};
+
+    auto baseSprite = CCSprite::create();
+    baseSprite->setContentSize({ 40, 45 });
+
+    auto iconSprite = GJItemIcon::createBrowserItem(
+        iconType, icon.second);
+
+    iconSprite->setPosition({baseSprite->getContentSize().width / 2, baseSprite->getContentSize().height});
+    iconSprite->setAnchorPoint({0.5, 1});
+    baseSprite->addChild(iconSprite);
+
+    if (gsm->isItemUnlocked(iconType, icon.second) && checkmark)
+    {
+        auto checkmark = CCSprite::createWithSpriteFrameName("GJ_completesIcon_001.png");
+        checkmark->setPosition(iconSprite->getContentSize() / 2);
+        checkmark->setScale(0.75f);
+
+        iconSprite->darkenStoreItem({30, 30, 30});
+        iconSprite->addChild(checkmark);
+    }
+    else
+    {
+        if (iconType == UnlockType::Col1 || iconType == UnlockType::Col2)
+        {
+            auto colorType = (iconType == UnlockType::Col1) ? CCLabelBMFont::create("1", "bigFont.fnt") : CCLabelBMFont::create("2", "bigFont.fnt");
+            colorType->setPosition(iconSprite->getContentSize() / 2);
+            colorType->setScale(0.5f);
+
+            iconSprite->addChild(colorType);
+        }
+
+        auto text = CCLabelBMFont::create(label, "goldFont.fnt");
+        text->setPosition({baseSprite->getContentSize().width / 2, 0.0f});
+        text->setAnchorPoint({0.5, 0});
+        text->setScale(0.5f);
+
+        baseSprite->addChild(text);
+    }
+
+    //  Creates the Icon as a button itself.
+    auto iconButton = CCMenuItemSpriteExtra::create(
+        baseSprite,
+        this,
+        menu_selector(SecretRewardsListAlert::onIcon));
+
+    //	Passes the user-defined IconParameters for its callback
+    iconButton->setUserObject(new IconParameters(icon.first, icon.second, menu->getTag()));
+
+    menu->addChild(iconButton);
+    menu->updateLayout();
+}
+
+void SecretRewardsListAlert::createItemGroup(CCMenu *menu, std::map<int, int> icons)
 {
     //  log::info("Function called, map size {}", icons.size());
 
@@ -511,7 +658,7 @@ void ChestRewardsListAlert::createItemGroup(CCMenu *menu, std::map<int, int> ico
 
     for (auto const &[gamemode, iconID] : icons)
     {
-        auto noCheckmark = Mod::get()->getSettingValue<bool>("disable-checkmark");
+        auto checkmark = Mod::get()->getSettingValue<bool>("disable-checkmark");
         auto gsm = GameStatsManager::sharedState();
         UnlockType iconType{gamemode};
 
@@ -519,7 +666,7 @@ void ChestRewardsListAlert::createItemGroup(CCMenu *menu, std::map<int, int> ico
             iconType,
             iconID);
 
-        if (gsm->isItemUnlocked(iconType, iconID) && !noCheckmark)
+        if (gsm->isItemUnlocked(iconType, iconID) && checkmark)
         {
             auto checkmark = CCSprite::createWithSpriteFrameName("GJ_completesIcon_001.png");
             checkmark->setPosition(iconSpr->getContentSize() / 2);
@@ -544,7 +691,7 @@ void ChestRewardsListAlert::createItemGroup(CCMenu *menu, std::map<int, int> ico
         auto iconButton = CCMenuItemSpriteExtra::create(
             iconSpr,
             this,
-            menu_selector(ChestRewardsListAlert::onIcon));
+            menu_selector(SecretRewardsListAlert::onIcon));
 
         //	Passes the user-defined IconParameters for its callback
         iconButton->setUserObject(new IconParameters(gamemode, iconID, menu->getTag()));
@@ -566,7 +713,7 @@ void ChestRewardsListAlert::createItemGroup(CCMenu *menu, std::map<int, int> ico
 }
 
 //	When a specific Icon Button is pressed
-void ChestRewardsListAlert::onIcon(CCObject *sender)
+void SecretRewardsListAlert::onIcon(CCObject *sender)
 {
     auto parameters = static_cast<IconParameters *>(
         static_cast<CCNode *>(sender)->getUserObject());
@@ -575,9 +722,32 @@ void ChestRewardsListAlert::onIcon(CCObject *sender)
     ItemInfoPopup::create(parameters->p_iconID, iconType)->show();
 };
 
-ChestRewardsListAlert *ChestRewardsListAlert::create()
+//  Shows the stats of the Player
+void SecretRewardsListAlert::onInfo(CCObject *sender)
 {
-    auto ret = new ChestRewardsListAlert();
+    std::string info =
+        "<cj>1-Key:</c> " + std::to_string(m_chestCount[0]) + " out of " + std::to_string(m_chestTotal[0]) +
+        "\n<cj>5-Keys:</c> " + std::to_string(m_chestCount[1]) + " out of " + std::to_string(m_chestTotal[1]) +
+        "\n<cj>10-Keys:</c> " + std::to_string(m_chestCount[2]) + " out of " + std::to_string(m_chestTotal[2]) +
+        "\n<cg>25-Keys:</c> " + std::to_string(m_chestCount[3]) + " out of " + std::to_string(m_chestTotal[3]) +
+        "\n<cg>50-Keys:</c> " + std::to_string(m_chestCount[4]) + " out of " + std::to_string(m_chestTotal[4]) +
+        "\n<cg>100-Keys:</c> " + std::to_string(m_chestCount[5]) + " out of " + std::to_string(m_chestTotal[5]) +
+        "\n<cy>Gold Keys:</c> " + std::to_string(m_chestCount[6]) + " out of " + std::to_string(m_chestTotal[6]) +
+        "\n<cp>Wraith's:</c> " + std::to_string(m_chestCount[7]) + " out of " + std::to_string(m_chestTotal[7]);
+
+    FLAlertLayer::create("Unlocked Items", info.c_str(), "OK")->show();
+};
+
+//  Opens the settings of the mod
+void SecretRewardsListAlert::onSettings(CCObject *sender)
+{
+    geode::openSettingsPopup(Mod::get());
+}
+
+//  Create
+SecretRewardsListAlert *SecretRewardsListAlert::create()
+{
+    auto ret = new SecretRewardsListAlert();
 
     if (ret->initAnchored(450.f, 260.f))
     {

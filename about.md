@@ -1,14 +1,14 @@
 # Treasure Checklist
 
-Displays all the rewards you have collected (or left to collect) from every type of Secret chest located in the Treasure Room.
+Shows you all the rewards you have collected (or left to collect) from every type of Chest located in the Treasure Room.
 
 ## Options
 
-- Remove button from the Icon kit.
-- Show rewards like Colors and Death effects.
-- Group the Tier II chest rewards.
-- Disable checkmark.
-- Display the Golden key chests. (Experimental)
+- Group the Tier II Rewards.
+- Shows other rewards like Colors and Death Effects.
+- Sort the rewards from Golden Key chests.
+- Remove the checkmark from icons.
+- Display Wraith's rewards.
 
 ## Contact
 
