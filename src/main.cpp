@@ -62,3 +62,13 @@ class $modify(TreasureRoomLayer, SecretRewardsLayer){
 		SecretRewardsListAlert::create()->show();
 	}
 };
+
+$on_mod(Loaded) {
+	listenForAllSettingChangesV3([](std::shared_ptr<SettingV3> setting)
+	{
+		if (auto rewardsList = static_cast<SecretRewardsListAlert*>(CCScene::get()->getChildByID("treasure-checklist-popup")))
+		{
+			rewardsList->onNavButton(rewardsList->getChildByID("navigation-menu")->getChildByTag(rewardsList->m_page));
+		}
+	});
+}
