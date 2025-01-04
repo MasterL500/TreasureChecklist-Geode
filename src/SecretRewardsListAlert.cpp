@@ -145,7 +145,7 @@ void SecretRewardsListAlert::loadData()
         for (auto rewardObject : CCArrayExt<GJRewardObject *>(chestEntry.second->m_rewardObjects))
         {
             if (
-                rewardObject->m_specialRewardItem == SpecialRewardItem::CustomItem && rewardObject->m_unlockType != (UnlockType)0)
+                rewardObject->m_specialRewardItem == SpecialRewardItem::CustomItem && rewardObject->m_unlockType != UnlockType(0))
             {
                 if (gsm->isItemUnlocked(rewardObject->m_unlockType, rewardObject->m_itemID))
                 {
@@ -214,7 +214,7 @@ void SecretRewardsListAlert::createIconPage(int ID, int index)
             if (
                 rewardObject->m_specialRewardItem == SpecialRewardItem::CustomItem &&
                 rewardObject->m_unlockType != UnlockType::GJItem &&
-                rewardObject->m_unlockType != (UnlockType)0)
+                rewardObject->m_unlockType != UnlockType(0))
             {
                 if (isExtraType(rewardObject->m_unlockType) && !showMiscRewards)
                 {
