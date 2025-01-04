@@ -166,7 +166,7 @@ void SecretRewardsListAlert::loadData()
     }
 }
 
-bool isMiscReward(UnlockType type)
+bool isExtraType(UnlockType type)
 {
     return
         type == UnlockType::Col1 ||
@@ -203,21 +203,20 @@ void SecretRewardsListAlert::createIconPage(int ID, int index)
 
     for (auto chestEntry : CCDictionaryExt<intptr_t, GJRewardItem *>(gsm->m_allTreasureRoomChests))
     {
-        if (chestEntry.first / 1000 != ID - 1)
+        if (chestEntry.first / 1000 + 1 != ID)
         {
             continue;
         }
 
         std::vector<std::pair<UnlockType, int>> chest;
-        auto rewardItem = chestEntry.second;
-        for (auto rewardObject : CCArrayExt<GJRewardObject *>(rewardItem->m_rewardObjects))
+        for (auto rewardObject : CCArrayExt<GJRewardObject *>(chestEntry.second->m_rewardObjects))
         {
             if (
                 rewardObject->m_specialRewardItem == SpecialRewardItem::CustomItem &&
                 rewardObject->m_unlockType != UnlockType::GJItem &&
                 rewardObject->m_unlockType != (UnlockType)0)
             {
-                if (isMiscReward(rewardObject->m_unlockType) && !showMiscRewards)
+                if (isExtraType(rewardObject->m_unlockType) && !showMiscRewards)
                 {
                     continue;
                 }
@@ -263,8 +262,8 @@ void SecretRewardsListAlert::createIconPage(int ID, int index)
                 std::sort(chest.begin(), chest.end(), [](
                     const std::pair<UnlockType, int> &a, const std::pair<UnlockType, int> &b)
                 {
-                    auto aMisc = isMiscReward(a.first);
-                    auto bMisc = isMiscReward(b.first);
+                    auto aMisc = isExtraType(a.first);
+                    auto bMisc = isExtraType(b.first);
                     return aMisc != bMisc ? aMisc < bMisc : a.first != b.first ? a.first < b.first : a.second < b.second;
                 });
             }
@@ -275,8 +274,8 @@ void SecretRewardsListAlert::createIconPage(int ID, int index)
         {
             auto &a = av[0];
             auto &b = bv[0];
-            auto aMisc = isMiscReward(a.first);
-            auto bMisc = isMiscReward(b.first);
+            auto aMisc = isExtraType(a.first);
+            auto bMisc = isExtraType(b.first);
             return aMisc != bMisc ? aMisc < bMisc : a.first != b.first ? a.first < b.first : a.second < b.second;
         });
     }
