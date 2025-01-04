@@ -537,7 +537,7 @@ void SecretRewardsListAlert::createItem(CCMenu *menu, UnlockType iconType, int i
         menu_selector(SecretRewardsListAlert::onIcon));
 
     //	Passes the user-defined IconParameters for its callback
-    iconButton->setUserObject(new IconParameters(iconType, iconID, menu->getTag()));
+    iconButton->setUserObject("icon-parameters"_spr, new IconParameters(iconType, iconID, menu->getTag()));
 
     menu->addChild(iconButton);
     menu->updateLayout();
@@ -594,7 +594,7 @@ void SecretRewardsListAlert::createItemLabeled(CCMenu *menu, std::pair<UnlockTyp
         menu_selector(SecretRewardsListAlert::onIcon));
 
     //	Passes the user-defined IconParameters for its callback
-    iconButton->setUserObject(new IconParameters(icon.first, icon.second, menu->getTag()));
+    iconButton->setUserObject("icon-parameters"_spr, new IconParameters(icon.first, icon.second, menu->getTag()));
 
     menu->addChild(iconButton);
     menu->updateLayout();
@@ -657,7 +657,7 @@ void SecretRewardsListAlert::createItemGroup(CCMenu *menu, std::vector<std::pair
             menu_selector(SecretRewardsListAlert::onIcon));
 
         //	Passes the user-defined IconParameters for its callback
-        iconButton->setUserObject(new IconParameters(iconType, iconID, menu->getTag()));
+        iconButton->setUserObject("icon-parameters"_spr, new IconParameters(iconType, iconID, menu->getTag()));
 
         auxMenu->addChild(iconButton);
         auxMenu->updateLayout();
@@ -679,7 +679,7 @@ void SecretRewardsListAlert::createItemGroup(CCMenu *menu, std::vector<std::pair
 void SecretRewardsListAlert::onIcon(CCObject *sender)
 {
     auto parameters = static_cast<IconParameters *>(
-        static_cast<CCNode *>(sender)->getUserObject());
+        static_cast<CCNode *>(sender)->getUserObject("icon-parameters"_spr));
 
     ItemInfoPopup::create(parameters->p_iconID, parameters->p_iconType)->show();
 };
