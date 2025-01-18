@@ -1,10 +1,9 @@
 #include "SecretRewardsListAlert.hpp"
-#include "SecretRewardsData.hpp"
 
 //  Structure for Icons
 struct IconParameters : public CCObject
 {
-    int p_iconType;
+    UnlockType p_iconType;
     int p_iconID;
     int p_chestID;
 
@@ -12,7 +11,7 @@ struct IconParameters : public CCObject
     /// @param icon
     /// @param id
 
-    IconParameters(int type, int id, int chest) : p_iconType(type), p_iconID(id), p_chestID(chest)
+    IconParameters(UnlockType type, int id, int chest) : p_iconType(type), p_iconID(id), p_chestID(chest)
     {
         this->autorelease();
     }
@@ -123,11 +122,10 @@ bool SecretRewardsListAlert::setup()
     iconMenu->setPositionY(winSize.height / 2 + 2.f);
     iconMenu->setScale(0.8f);
     this->addChild(iconMenu);
-
-    createIconPage(1, 1);
+    
+    onNavButton(navMenu->getChildByTag(1));
 
     this->m_noElasticity = true;
-    this->setTitle("Rewards (1 Key chests)");
     this->setID("treasure-checklist-popup");
     return true;
 };
@@ -136,14 +134,47 @@ void SecretRewardsListAlert::loadData()
 {
     auto gsm = GameStatsManager::sharedState();
 
-    for (
-        auto ii = SecretRewardsData.begin(); ii != SecretRewardsData.end(); ii++)
+    for (auto chestEntry : CCDictionaryExt<intptr_t, GJRewardItem *>(gsm->m_allTreasureRoomChests))
     {
-        if (gsm->isItemUnlocked(UnlockType{ii->at(1)}, ii->at(2)))
+        auto chestID = chestEntry.first / 1000;
+        if (chestID > 6)
         {
-            m_chestCount[ii->at(0)]++;
+            continue;
+        }
+
+        for (auto rewardObject : CCArrayExt<GJRewardObject *>(chestEntry.second->m_rewardObjects))
+        {
+            if (
+                rewardObject->m_specialRewardItem == SpecialRewardItem::CustomItem && rewardObject->m_unlockType != UnlockType(0))
+            {
+                if (gsm->isItemUnlocked(rewardObject->m_unlockType, rewardObject->m_itemID))
+                {
+                    m_chestCount[chestID]++;
+                }
+                m_chestTotal[chestID]++;
+            }
         }
     }
+
+    for (auto const &icon : gsm->m_wraithIcons)
+    {
+        if (gsm->isItemUnlocked(icon.first, icon.second))
+        {
+            m_chestCount[7]++;
+        }
+        m_chestTotal[7]++;
+    }
+}
+
+bool isExtraType(UnlockType type)
+{
+    return
+        type == UnlockType::Col1 ||
+        type == UnlockType::Col2 ||
+        type == UnlockType::Streak ||
+        type == UnlockType::Death ||
+        type == UnlockType::GJItem ||
+        type == UnlockType::ShipFire;
 }
 
 void SecretRewardsListAlert::createIconPage(int ID, int index)
@@ -167,125 +198,104 @@ void SecretRewardsListAlert::createIconPage(int ID, int index)
                             ->setCrossAxisOverflow(false)
                             ->setCrossAxisLineAlignment(AxisAlignment::Even));
 
-    switch (ID)
+    std::vector<std::vector<std::pair<UnlockType, int>>> chestList;
+    auto gsm = GameStatsManager::sharedState();
+
+    for (auto chestEntry : CCDictionaryExt<intptr_t, GJRewardItem *>(gsm->m_allTreasureRoomChests))
     {
-    case 1:
-        createItem(iconMenu, 0x1, {97, 163, 167, 176, 179, 189, 245, 249, 255, 278, 281, 282, 285, 287, 294, 302, 313, 333, 334, 335, 348, 350, 353, 373, 391, 414, 420, 426, 428});
-        createItem(iconMenu, 0x4, {26, 69, 83});
-        createItem(iconMenu, 0x5, {21});
-        createItem(iconMenu, 0x6, {19, 118});
-        createItem(iconMenu, 0x7, {16});
-        createItem(iconMenu, 0x8, {10});
-        createItem(iconMenu, 0x9, {7});
-
-        if (showMiscRewards)
+        if (chestEntry.first / 1000 + 1 != ID)
         {
-            createItem(iconMenu, 0x2, {41, 101});
-            createItem(iconMenu, 0x3, {40, 58, 61, 63, 66, 67, 69, 76, 78, 80});
-            createItem(iconMenu, 0xB, {3});
+            continue;
         }
-        break;
 
-    case 2:
-        createItem(iconMenu, 0x1, {112, 114, 115, 116, 137, 155, 171, 175, 177, 180, 265, 269, 273, 289, 291, 322, 330});
-        createItem(iconMenu, 0x4, {51, 73});
-        createItem(iconMenu, 0x5, {39, 42, 58});
-        createItem(iconMenu, 0x6, {53, 56, 97});
-        createItem(iconMenu, 0x7, {34, 42, 76});
-        createItem(iconMenu, 0x8, {26, 30});
-        createItem(iconMenu, 0x9, {17});
-
-        if (showMiscRewards)
+        std::vector<std::pair<UnlockType, int>> chest;
+        for (auto rewardObject : CCArrayExt<GJRewardObject *>(chestEntry.second->m_rewardObjects))
         {
-            createItem(iconMenu, 0xB, {14, 15});
-        }
-        break;
-
-    case 3:
-        createItem(iconMenu, 0x1, {212, 218, 228, 256, 259, 298, 300, 318, 328, 331, 336, 338, 340, 345, 349, 355, 366, 374, 380, 382, 389, 392, 398, 402, 410, 418, 432, 437, 441, 461});
-        createItem(iconMenu, 0x4, {64, 71, 89, 110});
-        createItem(iconMenu, 0x5, {85, 87, 101, 109});
-        createItem(iconMenu, 0x6, {81, 103, 123});
-        createItem(iconMenu, 0x7, {54, 91});
-        createItem(iconMenu, 0x8, {27, 61});
-        createItem(iconMenu, 0x9, {34, 52, 63});
-        createItem(iconMenu, 0xD, {14, 28, 29});
-
-        if (showMiscRewards)
-        {
-            createItem(iconMenu, 0x3, {64, 75, 81, 82, 83, 84, 101, 103, 105});
-        }
-        break;
-
-    case 4:
-        if (!groupRewards || !showMiscRewards)
-        {
-            createItem(iconMenu, 0x1, {293, 295, 404, 405, 406, 419});
-            createItem(iconMenu, 0x4, {59, 72, 112});
-            createItem(iconMenu, 0x5, {88, 89});
-            createItem(iconMenu, 0x6, {36, 58, 61, 67, 99, 126});
-            createItem(iconMenu, 0x7, {47, 73});
-            createItem(iconMenu, 0x8, {64, 67});
-            createItem(iconMenu, 0xD, {11, 13, 43});
-
-            if (showMiscRewards)
+            if (
+                rewardObject->m_specialRewardItem == SpecialRewardItem::CustomItem &&
+                rewardObject->m_unlockType != UnlockType::GJItem &&
+                rewardObject->m_unlockType != UnlockType(0))
             {
-                createItem(iconMenu, 0x2, {42, 43, 47, 50, 55, 66, 67, 68, 69, 70, 72, 73, 75, 78, 79, 81, 87, 88, 90});
-                createItem(iconMenu, 0x3, {42, 60, 74, 98});
+                if (isExtraType(rewardObject->m_unlockType) && !showMiscRewards)
+                {
+                    continue;
+                }
+                chest.push_back({rewardObject->m_unlockType, rewardObject->m_itemID});
             }
         }
-        else
+
+        if (!chest.empty())
+        {
+            if (groupRewards)
+            {
+                chestList.push_back(chest);
+            }
+            else
+            {
+                for (auto const &icon : chest)
+                {
+                    chestList.push_back({icon});
+                }
+            }
+        }
+    }
+
+    if (ID == 8)
+    {
+        for (auto const &icon : gsm->m_wraithIcons)
+        {
+            chestList.push_back({{icon.first, icon.second}});
+        }
+    }
+
+    if (ID != 7 || !orderRewards)
+    {
+        auto multipleItems = std::any_of(chestList.begin(), chestList.end(), [](
+            const std::vector<std::pair<UnlockType, int>> &c)
+        {
+            return c.size() > 1;
+        });
+        if (multipleItems)
+        {
+            for (auto &chest : chestList)
+            {
+                std::sort(chest.begin(), chest.end(), [](
+                    const std::pair<UnlockType, int> &a, const std::pair<UnlockType, int> &b)
+                {
+                    auto aMisc = isExtraType(a.first);
+                    auto bMisc = isExtraType(b.first);
+                    return aMisc != bMisc ? aMisc < bMisc : a.first != b.first ? a.first < b.first : a.second < b.second;
+                });
+            }
+        }
+
+        std::sort(chestList.begin(), chestList.end(), [](
+            const std::vector<std::pair<UnlockType, int>> &av, const std::vector<std::pair<UnlockType, int>> &bv)
+        {
+            auto &a = av[0];
+            auto &b = bv[0];
+            auto aMisc = isExtraType(a.first);
+            auto bMisc = isExtraType(b.first);
+            return aMisc != bMisc ? aMisc < bMisc : a.first != b.first ? a.first < b.first : a.second < b.second;
+        });
+    }
+
+    switch (ID)
+    {
+
+    case 4:
+        if (groupRewards && showMiscRewards)
         {
             iconMenu->setLayout(RowLayout::create()
                                     ->setGap(14.0f)
                                     ->setGrowCrossAxis(true)
                                     ->setCrossAxisOverflow(false)
                                     ->setCrossAxisLineAlignment(AxisAlignment::Even));
-
-            createItemGroup(iconMenu, {{0x1, 293}, {0x3, 98}});
-            createItemGroup(iconMenu, {{0x1, 295}, {0x3, 42}});
-            createItemGroup(iconMenu, {{0x1, 404}, {0x2, 70}});
-            createItemGroup(iconMenu, {{0x1, 405}, {0x2, 69}});
-            createItemGroup(iconMenu, {{0x1, 406}, {0x2, 68}});
-            createItemGroup(iconMenu, {{0x1, 419}, {0x2, 72}});
-            createItemGroup(iconMenu, {{0x4, 59}, {0x2, 78}});
-            createItemGroup(iconMenu, {{0x4, 72}, {0x2, 73}});
-            createItemGroup(iconMenu, {{0x4, 112}, {0x2, 43}});
-            createItemGroup(iconMenu, {{0x5, 88}, {0x2, 79}});
-            createItemGroup(iconMenu, {{0x5, 89}, {0x2, 50}});
-            createItemGroup(iconMenu, {{0x6, 39}, {0x2, 42}});
-            createItemGroup(iconMenu, {{0x6, 58}, {0x2, 75}});
-            createItemGroup(iconMenu, {{0x6, 61}, {0x2, 81}});
-            createItemGroup(iconMenu, {{0x6, 67}, {0x2, 55}});
-            createItemGroup(iconMenu, {{0x6, 99}, {0x3, 60}});
-            createItemGroup(iconMenu, {{0x6, 126}, {0x2, 87}});
-            createItemGroup(iconMenu, {{0x7, 47}, {0x2, 88}});
-            createItemGroup(iconMenu, {{0x7, 73}, {0x3, 74}});
-            createItemGroup(iconMenu, {{0x8, 64}, {0x2, 47}});
-            createItemGroup(iconMenu, {{0x8, 67}, {0x2, 46}});
-            createItemGroup(iconMenu, {{0xD, 11}, {0x2, 67}});
-            createItemGroup(iconMenu, {{0xD, 13}, {0x2, 66}});
-            createItemGroup(iconMenu, {{0xD, 43}, {0x2, 90}});
         }
         break;
 
     case 5:
-        if (!groupRewards)
-        {
-            createItem(iconMenu, 0x1, {166, 202, 261, 264, 280, 301, 361, 384, 393});
-            createItem(iconMenu, 0x4, {82, 85, 97, 135});
-            createItem(iconMenu, 0x5, {56, 115});
-            createItem(iconMenu, 0x6, {87, 142, 143});
-            createItem(iconMenu, 0x7, {79, 96});
-            createItem(iconMenu, 0x8, {36, 50});
-            createItem(iconMenu, 0x9, {47, 62});
-
-            if (showMiscRewards)
-            {
-                createItem(iconMenu, 0x3, {44, 45, 46, 48, 50, 55, 87, 90, 92, 93, 95, 97});
-            }
-        }
-        else
+        if (groupRewards)
         {
             iconMenu->setLayout(RowLayout::create()
                                     ->setGap(24.0f)
@@ -294,53 +304,11 @@ void SecretRewardsListAlert::createIconPage(int ID, int index)
                                     ->setCrossAxisAlignment(AxisAlignment::Center)
                                     ->setCrossAxisLineAlignment(AxisAlignment::Even));
             iconMenu->setContentSize({440.f, 220.f});
-
-            if (showMiscRewards)
-            {
-                createItemGroup(iconMenu, {{0x1, 384}, {0x4, 97}, {0x3, 87}});
-                createItemGroup(iconMenu, {{0x1, 280}, {0x6, 87}, {0x3, 90}});
-                createItemGroup(iconMenu, {{0x1, 166}, {0x4, 82}, {0x3, 92}});
-                createItemGroup(iconMenu, {{0x5, 56}, {0x9, 47}, {0x3, 93}});
-                createItemGroup(iconMenu, {{0x6, 142}, {0x1, 264}, {0x3, 95}});
-                createItemGroup(iconMenu, {{0x7, 96}, {0x4, 85}, {0x3, 97}});
-                createItemGroup(iconMenu, {{0x1, 301}, {0x4, 135}, {0x3, 44}});
-                createItemGroup(iconMenu, {{0x7, 79}, {0x1, 202}, {0x3, 45}});
-                createItemGroup(iconMenu, {{0x1, 261}, {0x6, 143}, {0x3, 46}});
-                createItemGroup(iconMenu, {{0x8, 36}, {0x5, 115}, {0x3, 48}});
-                createItemGroup(iconMenu, {{0x9, 62}, {0x1, 361}, {0x3, 50}});
-                createItemGroup(iconMenu, {{0x8, 50}, {0x1, 393}, {0x3, 55}});
-            }
-            else
-            {
-                createItemGroup(iconMenu, {{0x1, 384}, {0x4, 97}});
-                createItemGroup(iconMenu, {{0x1, 280}, {0x6, 87}});
-                createItemGroup(iconMenu, {{0x1, 166}, {0x4, 82}});
-                createItemGroup(iconMenu, {{0x5, 56}, {0x9, 47}});
-                createItemGroup(iconMenu, {{0x6, 142}, {0x1, 264}});
-                createItemGroup(iconMenu, {{0x7, 96}, {0x4, 85}});
-                createItemGroup(iconMenu, {{0x1, 301}, {0x4, 135}});
-                createItemGroup(iconMenu, {{0x7, 79}, {0x1, 202}});
-                createItemGroup(iconMenu, {{0x1, 261}, {0x6, 143}});
-                createItemGroup(iconMenu, {{0x8, 36}, {0x5, 115}});
-                createItemGroup(iconMenu, {{0x9, 62}, {0x1, 361}});
-                createItemGroup(iconMenu, {{0x8, 50}, {0x1, 393}});
-            }
         }
         break;
 
     case 6:
-        if (!groupRewards)
-        {
-            createItem(iconMenu, 0x1, {192, 204, 317, 323, 356, 367, 383, 386});
-            createItem(iconMenu, 0x4, {55, 116, 132, 136, 138, 160, 169});
-            createItem(iconMenu, 0x5, {69, 84});
-            createItem(iconMenu, 0x6, {42, 77, 94, 106});
-            createItem(iconMenu, 0x7, {57, 71});
-            createItem(iconMenu, 0x8, {44, 59});
-            createItem(iconMenu, 0x9, {41, 48, 59, 61});
-            createItem(iconMenu, 0xD, {4, 20, 35});
-        }
-        else
+        if (groupRewards)
         {
             iconMenu->setLayout(RowLayout::create()
                                     ->setGap(24.0f)
@@ -349,15 +317,6 @@ void SecretRewardsListAlert::createIconPage(int ID, int index)
                                     ->setCrossAxisAlignment(AxisAlignment::Center)
                                     ->setCrossAxisLineAlignment(AxisAlignment::Even));
             iconMenu->setContentSize({440.f, 220.f});
-
-            createItemGroup(iconMenu, {{0x6, 106}, {0x5, 69}, {0x4, 116}, {0x1, 204}});
-            createItemGroup(iconMenu, {{0x8, 59}, {0x1, 367}, {0x9, 61}, {0x4, 169}});
-            createItemGroup(iconMenu, {{0x1, 356}, {0x6, 77}, {0x7, 71}, {0xD, 35}});
-            createItemGroup(iconMenu, {{0x6, 42}, {0x5, 84}, {0x4, 160}, {0x1, 192}});
-            createItemGroup(iconMenu, {{0xD, 4}, {0x4, 55}, {0x1, 317}, {0x9, 59}});
-            createItemGroup(iconMenu, {{0x1, 383}, {0x4, 138}, {0x7, 57}, {0x9, 48}});
-            createItemGroup(iconMenu, {{0x1, 386}, {0x4, 136}, {0x8, 44}, {0x9, 41}});
-            createItemGroup(iconMenu, {{0xD, 20}, {0x1, 323}, {0x4, 132}, {0x6, 94}});
         }
         break;
 
@@ -373,55 +332,48 @@ void SecretRewardsListAlert::createIconPage(int ID, int index)
                                     ->setCrossAxisAlignment(AxisAlignment::Center)
                                     ->setCrossAxisLineAlignment(AxisAlignment::Even));
             iconMenu->setContentSize({480.f, 220.f});
-
-            createItemLabeled(iconMenu, {0x1, 157}, "1st");
-            createItemLabeled(iconMenu, {0x4, 133}, "2nd");
-            createItemLabeled(iconMenu, {0x1, 170}, "3rd");
-            createItemLabeled(iconMenu, {0x4, 165}, "4th");
-
-            createItemLabeled(iconMenu, {0xD, 5}, "5th");
-            createItemLabeled(iconMenu, {0x1, 183}, "6th");
-            createItemLabeled(iconMenu, {0x7, 95}, "7th");
-            createItemLabeled(iconMenu, {0x1, 258}, "8th");
-
-            createItemLabeled(iconMenu, {0x5, 100}, "9th");
-            createItemLabeled(iconMenu, {0x6, 43}, "10th");
-            createItemLabeled(iconMenu, {0x1, 357}, "11th");
-            createItemLabeled(iconMenu, {0xD, 24}, "12th");
-
-            createItemLabeled(iconMenu, {0x9, 33}, "13th");
-            createItemLabeled(iconMenu, {0x4, 139}, "14th");
-            createItemLabeled(iconMenu, {0x1, 283}, "15th");
-            createItemLabeled(iconMenu, {0x7, 88}, "16th");
-
-            createItemLabeled(iconMenu, {0x5, 74}, "17th");
-            createItemLabeled(iconMenu, {0x4, 147}, "18th");
-            createItemLabeled(iconMenu, {0x6, 66}, "19th");
-            createItemLabeled(iconMenu, {0x9, 31}, "20th");
         }
-        else
+        break;
+    }
+
+    int itemIndex = 1;
+
+    for (auto const &chest : chestList)
+    {
+        if (chest.size() == 1)
         {
-            createItem(iconMenu, 0x1, {157, 170, 183, 258, 283, 357});
-            createItem(iconMenu, 0x4, {133, 139, 147, 165});
-            createItem(iconMenu, 0x5, {74, 100});
-            createItem(iconMenu, 0x6, {43, 66});
-            createItem(iconMenu, 0x7, {88, 95});
-            createItem(iconMenu, 0x9, {31, 33});
-            createItem(iconMenu, 0xD, {5, 24});
+            if (ID == 7 && orderRewards)
+            {
+                int twoDigits = itemIndex % 100;
+                int lastDigit = twoDigits % 10;
+                auto label = "th";
+                if ((lastDigit == 1 || lastDigit == 2 || lastDigit == 3) && (twoDigits < 10 || twoDigits > 20))
+                {
+                    if (lastDigit == 1)
+                    {
+                        label = "st";
+                    }
+                    else if (lastDigit == 2)
+                    {
+                        label = "nd";
+                    }
+                    else if (lastDigit == 3)
+                    {
+                        label = "rd";
+                    }
+                }
+                createItemLabeled(iconMenu, chest[0], fmt::format("{}{}", itemIndex, label).c_str());
+                itemIndex++;
+            }
+            else
+            {
+                createItem(iconMenu, chest[0].first, chest[0].second);
+            }
         }
-        break;
-
-    case 8:
-        createItem(iconMenu, 0x1, {210, 231, 309, 343, 390, 409, 440, 445, 485});
-        createItem(iconMenu, 0x4, {121, 146, 155, 158});
-        createItem(iconMenu, 0x5, {63, 90, 91, 114});
-        createItem(iconMenu, 0x6, {63, 116, 138, 147});
-        createItem(iconMenu, 0x7, {44, 55, 83, 92});
-        createItem(iconMenu, 0x8, {37});
-        createItem(iconMenu, 0x9, {40});
-        createItem(iconMenu, 0xD, {17});
-        createItem(iconMenu, 0xE, {6, 8});
-        break;
+        else if (groupRewards)
+        {
+            createItemGroup(iconMenu, chest);
+        }
     }
 };
 
@@ -466,7 +418,13 @@ void SecretRewardsListAlert::onNavButton(CCObject *sender)
     auto menu = this->getChildByID("navigation-menu");
     auto navMenu = static_cast<CCMenu *>(menu);
     auto tag = sender->getTag();
+    if (tag == 8 && !showWraith)
+    {
+        tag = 1;
+        sender = navMenu->getChildByTag(1);
+    }
 
+    auto oldPage = m_page;
     m_page = tag;
 
     auto shopTitle = (tag == 1)   ? "Rewards (1 Key chests)"
@@ -480,21 +438,31 @@ void SecretRewardsListAlert::onNavButton(CCObject *sender)
 
     this->setTitle(shopTitle);
 
-    navMenu->removeAllChildren();
-    navMenu->updateLayout();
-
-    auto settingsButton = CCMenuItemSpriteExtra::create(
-        IconSelectButtonSprite::createWithSpriteFrameName("geode.loader/settings.png", 1.25f),
-        this,
-        menu_selector(SecretRewardsListAlert::onSettings));
-
-    settingsButton->setID("settings-button");
-    navMenu->addChild(settingsButton);
-
-    for (int ii = 1; ii <= m_totalPages - !showWraith; ii++)
+    if (auto navButton = static_cast<CCMenuItemSpriteExtra *>(navMenu->getChildByTag(oldPage)))
     {
-        createNavButton(navMenu, ii, tag == ii);
-    };
+        static_cast<CCSprite*>(navButton->getNormalImage())->setDisplayFrame(
+            CCSpriteFrameCache::get()->spriteFrameByName("geode.loader/baseIconSelect_Normal_Unselected.png"));
+        navButton->updateSprite();
+        navMenu->updateLayout();
+    }
+
+    if (auto navButton = static_cast<CCMenuItemSpriteExtra *>(sender))
+    {
+        static_cast<CCSprite*>(navButton->getNormalImage())->setDisplayFrame(
+            CCSpriteFrameCache::get()->spriteFrameByName("geode.loader/baseIconSelect_Normal_Selected.png"));
+        navButton->updateSprite();
+        navMenu->updateLayout();
+    }
+
+    if (showWraith && !navMenu->getChildByTag(8))
+    {
+        createNavButton(navMenu, 8, false);
+    }
+    else if (!showWraith && navMenu->getChildByTag(8))
+    {
+        navMenu->removeChildByTag(8);
+        navMenu->updateLayout();
+    }
 
     auto iconPage = this->getChildByID("icon-menu");
     auto iconMenu = static_cast<CCMenu *>(iconPage);
@@ -532,54 +500,50 @@ void SecretRewardsListAlert::onPageButton(CCObject * sender){
     createIconPage(m_page, tag);
 };*/
 
-void SecretRewardsListAlert::createItem(CCMenu *menu, int gamemode, std::vector<int> icons)
+void SecretRewardsListAlert::createItem(CCMenu *menu, UnlockType iconType, int iconID)
 {
-    for (auto const &iconID : icons)
+    auto checkmark = Mod::get()->getSettingValue<bool>("disable-checkmark");
+    auto gsm = GameStatsManager::sharedState();
+
+    auto iconSpr = GJItemIcon::createBrowserItem(
+        iconType,
+        iconID);
+
+    if (gsm->isItemUnlocked(iconType, iconID) && checkmark)
     {
-        auto checkmark = Mod::get()->getSettingValue<bool>("disable-checkmark");
-        auto gsm = GameStatsManager::sharedState();
-        UnlockType iconType{gamemode};
+        auto checkmark = CCSprite::createWithSpriteFrameName("GJ_completesIcon_001.png");
+        checkmark->setPosition(iconSpr->getContentSize() / 2);
+        checkmark->setScale(0.75f);
 
-        auto iconSpr = GJItemIcon::createBrowserItem(
-            iconType,
-            iconID);
-
-        if (gsm->isItemUnlocked(iconType, iconID) && checkmark)
-        {
-            auto checkmark = CCSprite::createWithSpriteFrameName("GJ_completesIcon_001.png");
-            checkmark->setPosition(iconSpr->getContentSize() / 2);
-            checkmark->setScale(0.75f);
-
-            iconSpr->darkenStoreItem({30, 30, 30});
-            iconSpr->addChild(checkmark);
-        }
-        else
-        {
-            if (iconType == UnlockType::Col1 || iconType == UnlockType::Col2)
-            {
-                auto colorType = (iconType == UnlockType::Col1) ? CCLabelBMFont::create("1", "bigFont.fnt") : CCLabelBMFont::create("2", "bigFont.fnt");
-                colorType->setPosition(iconSpr->getContentSize() / 2);
-                colorType->setScale(0.5f);
-
-                iconSpr->addChild(colorType);
-            }
-        };
-
-        //  Creates the Icon as a button itself.
-        auto iconButton = CCMenuItemSpriteExtra::create(
-            iconSpr,
-            this,
-            menu_selector(SecretRewardsListAlert::onIcon));
-
-        //	Passes the user-defined IconParameters for its callback
-        iconButton->setUserObject(new IconParameters(gamemode, iconID, menu->getTag()));
-
-        menu->addChild(iconButton);
-        menu->updateLayout();
+        iconSpr->darkenStoreItem({30, 30, 30});
+        iconSpr->addChild(checkmark);
     }
+    else
+    {
+        if (iconType == UnlockType::Col1 || iconType == UnlockType::Col2)
+        {
+            auto colorType = (iconType == UnlockType::Col1) ? CCLabelBMFont::create("1", "bigFont.fnt") : CCLabelBMFont::create("2", "bigFont.fnt");
+            colorType->setPosition(iconSpr->getContentSize() / 2);
+            colorType->setScale(0.5f);
+
+            iconSpr->addChild(colorType);
+        }
+    };
+
+    //  Creates the Icon as a button itself.
+    auto iconButton = CCMenuItemSpriteExtra::create(
+        iconSpr,
+        this,
+        menu_selector(SecretRewardsListAlert::onIcon));
+
+    //	Passes the user-defined IconParameters for its callback
+    iconButton->setUserObject("icon-parameters"_spr, new IconParameters(iconType, iconID, menu->getTag()));
+
+    menu->addChild(iconButton);
+    menu->updateLayout();
 }
 
-void SecretRewardsListAlert::createItemLabeled(CCMenu *menu, std::pair<int, int> icon, const char *label)
+void SecretRewardsListAlert::createItemLabeled(CCMenu *menu, std::pair<UnlockType, int> icon, const char *label)
 {
     auto checkmark = Mod::get()->getSettingValue<bool>("disable-checkmark");
     auto gsm = GameStatsManager::sharedState();
@@ -630,13 +594,13 @@ void SecretRewardsListAlert::createItemLabeled(CCMenu *menu, std::pair<int, int>
         menu_selector(SecretRewardsListAlert::onIcon));
 
     //	Passes the user-defined IconParameters for its callback
-    iconButton->setUserObject(new IconParameters(icon.first, icon.second, menu->getTag()));
+    iconButton->setUserObject("icon-parameters"_spr, new IconParameters(icon.first, icon.second, menu->getTag()));
 
     menu->addChild(iconButton);
     menu->updateLayout();
 }
 
-void SecretRewardsListAlert::createItemGroup(CCMenu *menu, std::map<int, int> icons)
+void SecretRewardsListAlert::createItemGroup(CCMenu *menu, std::vector<std::pair<UnlockType, int>> icons)
 {
     //  log::info("Function called, map size {}", icons.size());
 
@@ -656,11 +620,10 @@ void SecretRewardsListAlert::createItemGroup(CCMenu *menu, std::map<int, int> ic
         auxMenu->setContentSize({160.f, 40.f});
     }
 
-    for (auto const &[gamemode, iconID] : icons)
+    for (auto const &[iconType, iconID] : icons)
     {
         auto checkmark = Mod::get()->getSettingValue<bool>("disable-checkmark");
         auto gsm = GameStatsManager::sharedState();
-        UnlockType iconType{gamemode};
 
         auto iconSpr = GJItemIcon::createBrowserItem(
             iconType,
@@ -694,7 +657,7 @@ void SecretRewardsListAlert::createItemGroup(CCMenu *menu, std::map<int, int> ic
             menu_selector(SecretRewardsListAlert::onIcon));
 
         //	Passes the user-defined IconParameters for its callback
-        iconButton->setUserObject(new IconParameters(gamemode, iconID, menu->getTag()));
+        iconButton->setUserObject("icon-parameters"_spr, new IconParameters(iconType, iconID, menu->getTag()));
 
         auxMenu->addChild(iconButton);
         auxMenu->updateLayout();
@@ -716,10 +679,9 @@ void SecretRewardsListAlert::createItemGroup(CCMenu *menu, std::map<int, int> ic
 void SecretRewardsListAlert::onIcon(CCObject *sender)
 {
     auto parameters = static_cast<IconParameters *>(
-        static_cast<CCNode *>(sender)->getUserObject());
-    UnlockType iconType{parameters->p_iconType};
+        static_cast<CCNode *>(sender)->getUserObject("icon-parameters"_spr));
 
-    ItemInfoPopup::create(parameters->p_iconID, iconType)->show();
+    ItemInfoPopup::create(parameters->p_iconID, parameters->p_iconType)->show();
 };
 
 //  Shows the stats of the Player
@@ -732,8 +694,12 @@ void SecretRewardsListAlert::onInfo(CCObject *sender)
         "\n<cg>25-Keys:</c> " + std::to_string(m_chestCount[3]) + " out of " + std::to_string(m_chestTotal[3]) +
         "\n<cg>50-Keys:</c> " + std::to_string(m_chestCount[4]) + " out of " + std::to_string(m_chestTotal[4]) +
         "\n<cg>100-Keys:</c> " + std::to_string(m_chestCount[5]) + " out of " + std::to_string(m_chestTotal[5]) +
-        "\n<cy>Gold Keys:</c> " + std::to_string(m_chestCount[6]) + " out of " + std::to_string(m_chestTotal[6]) +
-        "\n<cp>Wraith's:</c> " + std::to_string(m_chestCount[7]) + " out of " + std::to_string(m_chestTotal[7]);
+        "\n<cy>Gold Keys:</c> " + std::to_string(m_chestCount[6]) + " out of " + std::to_string(m_chestTotal[6]);
+
+    if (Mod::get()->getSettingValue<bool>("wraith-page"))
+    {
+        info += "\n<cp>Wraith's:</c> " + std::to_string(m_chestCount[7]) + " out of " + std::to_string(m_chestTotal[7]);
+    }
 
     FLAlertLayer::create("Unlocked Items", info.c_str(), "OK")->show();
 };
