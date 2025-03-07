@@ -1,6 +1,6 @@
 # Changelog
 
-## <cg>v1.6.0-beta.1 (Latest)
+## <cg>v1.6.0-beta.1 (Latest)</c>
 
 *Special thanks to <co>Hiimjustin000</c> for your contributions to the mod!*
 * <cp>MacOS support!</c>
