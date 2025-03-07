@@ -1,6 +1,13 @@
 # Changelog
 
-### <cg>v1.5.0 (Latest)</c>
+## <cg>v1.6.0-beta.1 (Latest)
+
+*Special thanks to <co>Hiimjustin000</c> for your contributions to the mod!*
+* <cp>MacOS support!</c>
+* <co>Automatic shop item detection and pagination</c>
+* Other bugfixes
+
+### <cb>v1.5.0</c>
 
 * <cg>Added</c> page for rewards from Golden Key chests.
 * <cg>Added</c> order for rewards from Golden Key chests.
