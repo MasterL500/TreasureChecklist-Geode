@@ -1,6 +1,6 @@
 {
-	"geode": "4.1.2",
-	"version": "v1.5.0",
+	"geode": "4.2.0",
+	"version": "v1.6.0-beta.1",
 	"gd": {
 		"win": "2.2074",
 		"android": "2.2074",
@@ -16,13 +16,9 @@
 		"source": "https://github.com/MasterL500/TreasureChecklist-Geode",
 		"community": "https://discord.gg/tFUyJw5"
 	},
-	"dependencies": [
-		{
-			"id": "geode.node-ids",
-			"version": ">=v1.12.0",
-			"importance": "required"
-		}
-	],
+	"dependencies": {
+		"geode.node-ids": "1.12.0"
+	},
 	"settings": {
 		"misc-rewards": {
 			"type": "bool",
