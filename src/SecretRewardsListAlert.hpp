@@ -5,33 +5,34 @@
 
 using namespace geode::prelude;
 
-class SecretRewardsListAlert : public Popup<> {
-    public:
-        unsigned int m_page = 1;
-    protected:
-        unsigned int m_totalPages = 8;
+class SecretRewardsListAlert : public Popup<>
+{
+public:
+    unsigned int m_page = 1;
 
-        std::array<int, 8> m_chestCount = {0, 0, 0, 0, 0, 0, 0, 0};
-        std::array<int, 8> m_chestTotal = {0, 0, 0, 0, 0, 0, 0, 0};
+protected:
+    unsigned int m_totalPages = 8;
 
-        bool setup() override;
+    std::array<int, 8> m_chestCount = {0, 0, 0, 0, 0, 0, 0, 0};
+    std::array<int, 8> m_chestTotal = {0, 0, 0, 0, 0, 0, 0, 0};
 
-        void createItem(CCMenu *, UnlockType, int);
-        void createItemGroup(CCMenu *, std::vector<std::pair<UnlockType, int>>);
-        void createItemLabeled(CCMenu *, std::pair<UnlockType, int>, const char *);
+    bool setup() override;
 
-        void createNavButton(CCMenu *, int, bool);
-        void createIconPage(int, int);
+    void createItem(CCMenu *, UnlockType, int);
+    void createItemGroup(CCMenu *, std::vector<std::pair<UnlockType, int>>);
+    void createItemLabeled(CCMenu *, std::pair<UnlockType, int>, const char *);
 
-        void onPageButton(CCObject *);
-        void onSettings(CCObject *);
-        void onInfo(CCObject *);
+    void createNavButton(CCMenu *, int, bool);
+    void createIconPage(int, int);
 
-        void loadData();
+    void onPageButton(CCObject *);
+    void onSettings(CCObject *);
+    void onInfo(CCObject *);
 
-    public:
-        static SecretRewardsListAlert * create();
-        void onIcon(CCObject *);
-        void onNavButton(CCObject *);
+    void loadData();
 
+public:
+    static SecretRewardsListAlert *create();
+    void onNavButton(CCObject *);
+    void onIcon(CCObject *);
 };

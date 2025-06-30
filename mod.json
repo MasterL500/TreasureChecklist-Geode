@@ -1,6 +1,6 @@
 {
-	"geode": "4.2.0",
-	"version": "v1.6.0-beta.1",
+	"geode": "4.6.0",
+	"version": "v1.6.0",
 	"gd": {
 		"win": "2.2074",
 		"android": "2.2074",
@@ -14,12 +14,31 @@
 	"description": "Do you have the icon that you wanted?",
 	"links": {
 		"source": "https://github.com/MasterL500/TreasureChecklist-Geode",
+		"homepage": "https://ml500.carrd.co/",
 		"community": "https://discord.gg/tFUyJw5"
 	},
 	"dependencies": {
-		"geode.node-ids": "1.12.0"
+		"geode.node-ids": "1.18.0",
+		"rynat.better_unlock_info": {
+			"version": "1.3.0",
+			"importance": "suggested"
+		}
 	},
 	"settings": {
+		"main-settings": {
+			"type": "title",
+			"name": "Main Settings"
+		},
+		"garage-button": {
+			"type": "bool",
+			"name": "Icon Kit Button",
+			"default": true
+		},
+		"display-checkmark": {
+			"type": "bool",
+			"name": "Display Checkmarks",
+			"default": true
+		},
 		"misc-rewards": {
 			"type": "bool",
 			"name": "Misc. Rewards",
@@ -38,26 +57,16 @@
 			"description": "Displays the rewards from <cy>Golden Key Chests</c> in their settled order.",
 			"default": true
 		},
-		"disable-checkmark": {
-			"type": "bool",
-			"name": "Checkmark Items",
-			"description": "Disabling this allows the Icons to be displayed without the checkmark. If you want to see the designs.",
-			"default": true
-		},
-		"garage-button": {
-			"type": "bool",
-			"name": "Icon Kit Button",
-			"default": true
-		},
 		"experimental-segment": {
 			"type": "title",
-			"name": "Other features"
+			"name": "Other features",
+			"description": "Experimental features, prone to bugs or changes."
 		},
 		"wraith-page": {
 			"type": "bool",
 			"name": "Wraith's Rewards",
-			"description": "Adds a page with the Special Chest rewards from the 4th Vault (<cp>The Wraith</c>).",
-			"default": false
+			"description": "Adds an extra page with the icons you can get from <cp>The Wraith</c>.",
+			"default": true
 		}
 	},
 	"resources": {

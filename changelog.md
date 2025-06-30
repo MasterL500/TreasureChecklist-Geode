@@ -1,11 +1,19 @@
 # Changelog
 
-## <cg>v1.6.0-beta.1 (Latest)</c>
+## <cg>v1.6.0 (Latest)</c>
 
 *Special thanks to <co>Hiimjustin000</c> for your contributions to the mod!*
+
 * <cp>MacOS support!</c>
-* <co>Automatic shop item detection and pagination</c>
-* Other bugfixes
+* <co>Automatic icon detection</c>.
+* <cg>Added</c> extra icon from the April Fools event.
+* <cy>Removed</c> duplicate and misplaced icons.
+
+### <cb>v1.6.0-beta.1</c>
+
+* <cp>MacOS support!</c>
+* <co>Automatic icon detection</c>.
+* Other bugfixes.
 
 ### <cb>v1.5.0</c>
 

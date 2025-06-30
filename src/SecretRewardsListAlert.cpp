@@ -19,23 +19,21 @@ struct IconParameters : public CCObject
 
 bool SecretRewardsListAlert::setup()
 {
-    auto winSize = CCDirector::sharedDirector()->getWinSize();
+    auto layerSize = m_mainLayer->getContentSize();
     auto showWraith = Mod::get()->getSettingValue<bool>("wraith-page");
     loadData();
 
     //  Background for the Icon Lists
     auto iconListBG = CCScale9Sprite::create("square02b_001.png", {0, 0, 80, 80});
-    iconListBG->setPosition({winSize.width / 2.f, winSize.height / 2.f + 2.f});
+    iconListBG->setPosition({layerSize.width / 2.f, layerSize.height / 2.f + 2.f});
     iconListBG->setColor({133, 68, 41});
     iconListBG->setContentSize({430, 176});
-    this->addChild(iconListBG);
+    m_mainLayer->addChild(iconListBG);
 
     //  Info Button (Menu)
     auto infoMenu = CCMenu::create();
-    infoMenu->setContentSize({405.f, 215.f});
-    infoMenu->ignoreAnchorPointForPosition(false);
+    infoMenu->setContentSize({400.0f, 216.0f});
     infoMenu->setID("info-menu");
-    this->addChild(infoMenu);
 
     //  Info Button (Itself)
     auto infoButton = CCMenuItemSpriteExtra::create(
@@ -45,19 +43,20 @@ bool SecretRewardsListAlert::setup()
 
     infoButton->setPosition(infoMenu->getContentSize());
     infoButton->setID("info-button");
-    infoMenu->addChild(infoButton);
+    infoMenu->addChildAtPosition(infoButton, Anchor::TopRight);
+    m_mainLayer->addChildAtPosition(infoMenu, Anchor::Center);
 
     //  Navigation Menu
     auto navMenu = CCMenu::create();
-    navMenu->setPosition({winSize.width / 2, winSize.height / 2 - 104.0f});
+    navMenu->setPosition({layerSize.width / 2, layerSize.height / 2 - 104.0f});
     navMenu->setLayout(RowLayout::create()
                            ->setGap(6.f));
     navMenu->setID("navigation-menu");
-    this->addChild(navMenu);
+    m_mainLayer->addChild(navMenu);
 
     //  Settings Button (Itself)
     auto settingsButton = CCMenuItemSpriteExtra::create(
-        IconSelectButtonSprite::createWithSpriteFrameName("geode.loader/settings.png", 1.25f),
+        IconSelectButtonSprite::createWithSprite("TC_SettingsIcon.png"_spr, 1.5F),
         this,
         menu_selector(SecretRewardsListAlert::onSettings));
 
@@ -66,47 +65,7 @@ bool SecretRewardsListAlert::setup()
 
     //  Navigation Menu (Buttons)
     for (int ii = 1; ii <= m_totalPages - !showWraith; ii++)
-    {
         createNavButton(navMenu, ii, ii == 1);
-    };
-
-    /*
-    //  Arrow Buttons for shops with more than One page (FOR THE FUTURE)
-    auto pageNavMenu = CCMenu::create();
-    pageNavMenu->setLayout(RowLayout::create()
-                ->setGap(460.0f)
-                ->setGrowCrossAxis(true)
-                ->setCrossAxisOverflow(false));
-    pageNavMenu->setID("page-menu");
-    this->addChild(pageNavMenu);
-
-    auto prevBtn = CCMenuItemSpriteExtra::create(
-        CCSprite::createWithSpriteFrameName("GJ_arrow_01_001.png"),
-        this,
-        nullptr // menu_selector(SecretRewardsListAlert::onPageButton)
-    );
-
-    prevBtn->setID("arrow-prev-button");
-    prevBtn->setTag(1);
-
-    auto nextSpr = CCSprite::createWithSpriteFrameName("GJ_arrow_01_001.png");
-    nextSpr->setFlipX(true);
-
-    auto nextBtn = CCMenuItemSpriteExtra::create(
-        nextSpr,
-        this,
-        nullptr // menu_selector(SecretRewardsListAlert::onPageButton)
-    );
-
-    nextBtn->setID("arrow-next-button");
-    nextBtn->setScale(-1);
-    nextBtn->setTag(2);
-
-    pageNavMenu->addChild(prevBtn);
-    pageNavMenu->addChild(nextBtn);
-    pageNavMenu->setVisible(false);
-    pageNavMenu->updateLayout();
-    */
 
     //  Creates the Menu
     auto iconMenu = CCMenu::create();
@@ -119,13 +78,13 @@ bool SecretRewardsListAlert::setup()
                             ->setCrossAxisLineAlignment(AxisAlignment::Even));
 
     iconMenu->setID("icon-menu");
-    iconMenu->setPositionY(winSize.height / 2 + 2.f);
     iconMenu->setScale(0.8f);
-    this->addChild(iconMenu);
-    
+    iconMenu->setPosition({layerSize.width / 2, layerSize.height / 2});
+    m_mainLayer->addChild(iconMenu);
+
     onNavButton(navMenu->getChildByTag(1));
 
-    this->m_noElasticity = true;
+    //  this->m_noElasticity = true;
     this->setID("treasure-checklist-popup");
     return true;
 };
@@ -168,18 +127,17 @@ void SecretRewardsListAlert::loadData()
 
 bool isExtraType(UnlockType type)
 {
-    return
-        type == UnlockType::Col1 ||
-        type == UnlockType::Col2 ||
-        type == UnlockType::Streak ||
-        type == UnlockType::Death ||
-        type == UnlockType::GJItem ||
-        type == UnlockType::ShipFire;
+    return type == UnlockType::Col1 ||
+           type == UnlockType::Col2 ||
+           type == UnlockType::Streak ||
+           type == UnlockType::Death ||
+           type == UnlockType::GJItem ||
+           type == UnlockType::ShipFire;
 }
 
 void SecretRewardsListAlert::createIconPage(int ID, int index)
 {
-    auto menu = this->getChildByID("icon-menu");
+    auto menu = this->getChildByIDRecursive("icon-menu");
     auto iconMenu = static_cast<CCMenu *>(menu);
 
     auto showMiscRewards = Mod::get()->getSettingValue<bool>("misc-rewards");
@@ -250,34 +208,27 @@ void SecretRewardsListAlert::createIconPage(int ID, int index)
 
     if (ID != 7 || !orderRewards)
     {
-        auto multipleItems = std::any_of(chestList.begin(), chestList.end(), [](
-            const std::vector<std::pair<UnlockType, int>> &c)
-        {
-            return c.size() > 1;
-        });
+        auto multipleItems = std::any_of(chestList.begin(), chestList.end(), [](const std::vector<std::pair<UnlockType, int>> &c)
+                                         { return c.size() > 1; });
         if (multipleItems)
         {
             for (auto &chest : chestList)
             {
-                std::sort(chest.begin(), chest.end(), [](
-                    const std::pair<UnlockType, int> &a, const std::pair<UnlockType, int> &b)
-                {
+                std::sort(chest.begin(), chest.end(), [](const std::pair<UnlockType, int> &a, const std::pair<UnlockType, int> &b)
+                          {
                     auto aMisc = isExtraType(a.first);
                     auto bMisc = isExtraType(b.first);
-                    return aMisc != bMisc ? aMisc < bMisc : a.first != b.first ? a.first < b.first : a.second < b.second;
-                });
+                    return aMisc != bMisc ? aMisc < bMisc : a.first != b.first ? a.first < b.first : a.second < b.second; });
             }
         }
 
-        std::sort(chestList.begin(), chestList.end(), [](
-            const std::vector<std::pair<UnlockType, int>> &av, const std::vector<std::pair<UnlockType, int>> &bv)
-        {
+        std::sort(chestList.begin(), chestList.end(), [](const std::vector<std::pair<UnlockType, int>> &av, const std::vector<std::pair<UnlockType, int>> &bv)
+                  {
             auto &a = av[0];
             auto &b = bv[0];
             auto aMisc = isExtraType(a.first);
             auto bMisc = isExtraType(b.first);
-            return aMisc != bMisc ? aMisc < bMisc : a.first != b.first ? a.first < b.first : a.second < b.second;
-        });
+            return aMisc != bMisc ? aMisc < bMisc : a.first != b.first ? a.first < b.first : a.second < b.second; });
     }
 
     switch (ID)
@@ -367,6 +318,21 @@ void SecretRewardsListAlert::createIconPage(int ID, int index)
             }
             else
             {
+                if (ID == 8)
+                {
+                    //  Adds this extra icon before the current one
+                    if (chest[0].first == UnlockType::Bird && chest[0].second == 116)
+                        createItem(iconMenu, UnlockType::Bird, 71);
+
+                    //  Skips this icon because it's a duplicate
+                    if (chest[0].first == UnlockType::Swing && chest[0].second == 68)
+                        continue;
+
+                    //  Skips this icon because it's a duplicate
+                    if (chest[0].first == UnlockType::Ball && chest[0].second == 50)
+                        continue;
+                }
+
                 createItem(iconMenu, chest[0].first, chest[0].second);
             }
         }
@@ -415,13 +381,14 @@ void SecretRewardsListAlert::createNavButton(CCMenu *menu, int tag, bool active)
 void SecretRewardsListAlert::onNavButton(CCObject *sender)
 {
     auto showWraith = Mod::get()->getSettingValue<bool>("wraith-page");
-    auto menu = this->getChildByID("navigation-menu");
+    auto menu = this->getChildByIDRecursive("navigation-menu");
     auto navMenu = static_cast<CCMenu *>(menu);
     auto tag = sender->getTag();
+
     if (tag == 8 && !showWraith)
     {
-        tag = 1;
         sender = navMenu->getChildByTag(1);
+        tag = 1;
     }
 
     auto oldPage = m_page;
@@ -440,16 +407,14 @@ void SecretRewardsListAlert::onNavButton(CCObject *sender)
 
     if (auto navButton = static_cast<CCMenuItemSpriteExtra *>(navMenu->getChildByTag(oldPage)))
     {
-        static_cast<CCSprite*>(navButton->getNormalImage())->setDisplayFrame(
-            CCSpriteFrameCache::get()->spriteFrameByName("geode.loader/baseIconSelect_Normal_Unselected.png"));
+        static_cast<CCSprite *>(navButton->getNormalImage())->setDisplayFrame(CCSpriteFrameCache::get()->spriteFrameByName("geode.loader/baseIconSelect_Normal_Unselected.png"));
         navButton->updateSprite();
         navMenu->updateLayout();
     }
 
     if (auto navButton = static_cast<CCMenuItemSpriteExtra *>(sender))
     {
-        static_cast<CCSprite*>(navButton->getNormalImage())->setDisplayFrame(
-            CCSpriteFrameCache::get()->spriteFrameByName("geode.loader/baseIconSelect_Normal_Selected.png"));
+        static_cast<CCSprite *>(navButton->getNormalImage())->setDisplayFrame(CCSpriteFrameCache::get()->spriteFrameByName("geode.loader/baseIconSelect_Normal_Selected.png"));
         navButton->updateSprite();
         navMenu->updateLayout();
     }
@@ -464,7 +429,7 @@ void SecretRewardsListAlert::onNavButton(CCObject *sender)
         navMenu->updateLayout();
     }
 
-    auto iconPage = this->getChildByID("icon-menu");
+    auto iconPage = this->getChildByIDRecursive("icon-menu");
     auto iconMenu = static_cast<CCMenu *>(iconPage);
     iconMenu->removeAllChildren();
     iconMenu->updateLayout();
@@ -502,7 +467,7 @@ void SecretRewardsListAlert::onPageButton(CCObject * sender){
 
 void SecretRewardsListAlert::createItem(CCMenu *menu, UnlockType iconType, int iconID)
 {
-    auto checkmark = Mod::get()->getSettingValue<bool>("disable-checkmark");
+    auto checkmark = Mod::get()->getSettingValue<bool>("display-checkmark");
     auto gsm = GameStatsManager::sharedState();
 
     auto iconSpr = GJItemIcon::createBrowserItem(
@@ -545,12 +510,12 @@ void SecretRewardsListAlert::createItem(CCMenu *menu, UnlockType iconType, int i
 
 void SecretRewardsListAlert::createItemLabeled(CCMenu *menu, std::pair<UnlockType, int> icon, const char *label)
 {
-    auto checkmark = Mod::get()->getSettingValue<bool>("disable-checkmark");
+    auto checkmark = Mod::get()->getSettingValue<bool>("display-checkmark");
     auto gsm = GameStatsManager::sharedState();
     UnlockType iconType{icon.first};
 
     auto baseSprite = CCSprite::create();
-    baseSprite->setContentSize({ 40, 45 });
+    baseSprite->setContentSize({40, 45});
 
     auto iconSprite = GJItemIcon::createBrowserItem(
         iconType, icon.second);
@@ -622,7 +587,7 @@ void SecretRewardsListAlert::createItemGroup(CCMenu *menu, std::vector<std::pair
 
     for (auto const &[iconType, iconID] : icons)
     {
-        auto checkmark = Mod::get()->getSettingValue<bool>("disable-checkmark");
+        auto checkmark = Mod::get()->getSettingValue<bool>("display-checkmark");
         auto gsm = GameStatsManager::sharedState();
 
         auto iconSpr = GJItemIcon::createBrowserItem(
