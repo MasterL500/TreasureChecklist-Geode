@@ -1,13 +1,14 @@
 {
 	"geode": "4.6.0",
-	"version": "v1.6.0",
 	"gd": {
 		"win": "2.2074",
 		"android": "2.2074",
-		"mac": "2.2074"
+		"mac": "2.2074",
+		"ios": "2.2074"
 	},
 	"id": "ml5.treasure-checklist",
 	"name": "Treasure Checklist",
+	"version": "v1.6.0",
 	"developers": [
 		"ML500"
 	],
