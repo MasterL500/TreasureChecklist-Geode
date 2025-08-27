@@ -1,6 +1,12 @@
 # Changelog
 
-## <cg>v1.6.0 (Latest)</c>
+## <cg>v1.6.1 (Latest)</c>
+
+* <cg>Added</c> extra <cp>Wraith</c> icon from Space Invaders event level.
+* <cg>Added</c> extra <cp>Wraith</c> icon from Random Gauntlet announcement.
+* <cy>Fixed</c> Unlocked items count.
+
+### <cb>v1.6.0</c>
 
 *Special thanks to <co>Hiimjustin000</c> for your contributions to the mod!*
 

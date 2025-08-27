@@ -117,12 +117,35 @@ void SecretRewardsListAlert::loadData()
 
     for (auto const &icon : gsm->m_wraithIcons)
     {
+        //  Duplicate
+        if (icon.first == UnlockType::Swing && icon.second == 68)
+            continue;
+
+        //  Duplicate
+        if (icon.first == UnlockType::Ball && icon.second == 50)
+            continue;
+
         if (gsm->isItemUnlocked(icon.first, icon.second))
         {
             m_chestCount[7]++;
         }
         m_chestTotal[7]++;
     }
+
+    //  Adds the icons without Wraith info into the count
+    //  Random Gauntlet announcement Cube
+    if (gsm->isItemUnlocked(UnlockType::Cube, 351))
+        m_chestCount[7]++;
+
+    //  Space Invaders UFO
+    if (gsm->isItemUnlocked(UnlockType::Bird, 57))
+        m_chestCount[7]++;
+
+    //  GD Gangster Rap UFO
+    if (gsm->isItemUnlocked(UnlockType::Bird, 71))
+        m_chestCount[7]++;
+
+    m_chestTotal[7] += 3;
 }
 
 bool isExtraType(UnlockType type)
@@ -320,7 +343,17 @@ void SecretRewardsListAlert::createIconPage(int ID, int index)
             {
                 if (ID == 8)
                 {
-                    //  Adds this extra icon before the current one
+                    //  I love it when Robtop adds icons without wraith information, so I gotta manually add them here.
+
+                    //  Random Gauntlet announcement Cube
+                    if (chest[0].first == UnlockType::Cube && chest[0].second == 390)
+                        createItem(iconMenu, UnlockType::Cube, 351);
+
+                    //  Space Invaders UFO
+                    if (chest[0].first == UnlockType::Bird && chest[0].second == 63)
+                        createItem(iconMenu, UnlockType::Bird, 57);
+
+                    //  GD Gangster Rap UFO
                     if (chest[0].first == UnlockType::Bird && chest[0].second == 116)
                         createItem(iconMenu, UnlockType::Bird, 71);
 

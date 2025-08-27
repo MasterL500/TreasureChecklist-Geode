@@ -8,11 +8,11 @@
 	},
 	"id": "ml5.treasure-checklist",
 	"name": "Treasure Checklist",
-	"version": "v1.6.0",
+	"description": "Do you have the icon that you wanted?",
+	"version": "v1.6.1",
 	"developers": [
 		"ML500"
 	],
-	"description": "Do you have the icon that you wanted?",
 	"links": {
 		"source": "https://github.com/MasterL500/TreasureChecklist-Geode",
 		"homepage": "https://ml500.carrd.co/",
