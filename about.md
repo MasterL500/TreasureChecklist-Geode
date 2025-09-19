@@ -16,7 +16,7 @@ First Geode mod, getting the hang of programming in GD. To report bugs, crashes 
 
 ## Special Thanks
 
-- **Hiimjustin000**: special contribution for MacOS support and icon detection.
+- **Hiimjustin000**: special contribution for MacOS support.
 - **Colon**: For extracting the data about the Treasure Room.
 - **Geode**: Documentation and tools to program in GD.
 - **GDP Server**: For the reference information.

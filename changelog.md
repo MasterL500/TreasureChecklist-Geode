@@ -5,7 +5,6 @@
 * <cg>Added</c> extra <cp>Wraith</c> icon from Space Invaders event level.
 * <cg>Added</c> extra <cp>Wraith</c> icon from Random Gauntlet announcement.
 * <cg>Added</c> extra <cp>Wraith</c> icon from Funhouse event level.
-* <cy>Fixed</c> odd placement on Gold Key rewards.
 * <cy>Fixed</c> Unlocked items count.
 
 ### <cb>v1.6.0</c>
@@ -14,7 +13,7 @@
 
 * <cp>MacOS support!</c>
 * <co>Automatic icon detection</c>.
-* <cg>Added</c> extra icon from the April Fools event.
+* <cg>Added</c> extra <cp>Wraith</c> icon from April Fools event level.
 * <cy>Removed</c> duplicate and misplaced icons.
 
 ### <cb>v1.6.0-beta.1</c>
