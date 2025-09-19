@@ -89,6 +89,7 @@ bool SecretRewardsListAlert::setup()
     return true;
 };
 
+//  Loads the data the player has
 void SecretRewardsListAlert::loadData()
 {
     auto gsm = GameStatsManager::sharedState();
@@ -137,6 +138,10 @@ void SecretRewardsListAlert::loadData()
     if (gsm->isItemUnlocked(UnlockType::Cube, 351))
         m_chestCount[7]++;
 
+    //  Funhouse Cube
+    if (gsm->isItemUnlocked(UnlockType::Cube, 321))
+        m_chestCount[7]++;
+
     //  Space Invaders UFO
     if (gsm->isItemUnlocked(UnlockType::Bird, 57))
         m_chestCount[7]++;
@@ -145,9 +150,11 @@ void SecretRewardsListAlert::loadData()
     if (gsm->isItemUnlocked(UnlockType::Bird, 71))
         m_chestCount[7]++;
 
-    m_chestTotal[7] += 3;
+    //  Adds the extra icons
+    m_chestTotal[7] += 4;
 }
 
+//  Returns if the unlock is a non-icon
 bool isExtraType(UnlockType type)
 {
     return type == UnlockType::Col1 ||
@@ -344,6 +351,10 @@ void SecretRewardsListAlert::createIconPage(int ID, int index)
                 if (ID == 8)
                 {
                     //  I love it when Robtop adds icons without wraith information, so I gotta manually add them here.
+
+                    //  Random Gauntlet announcement Cube
+                    if (chest[0].first == UnlockType::Cube && chest[0].second == 343)
+                        createItem(iconMenu, UnlockType::Cube, 321);
 
                     //  Random Gauntlet announcement Cube
                     if (chest[0].first == UnlockType::Cube && chest[0].second == 390)
@@ -548,14 +559,15 @@ void SecretRewardsListAlert::createItemLabeled(CCMenu *menu, std::pair<UnlockTyp
     UnlockType iconType{icon.first};
 
     auto baseSprite = CCSprite::create();
-    baseSprite->setContentSize({40, 45});
+    baseSprite->setContentSize({40, 40});
 
     auto iconSprite = GJItemIcon::createBrowserItem(
         iconType, icon.second);
 
-    iconSprite->setPosition({baseSprite->getContentSize().width / 2, baseSprite->getContentSize().height});
-    iconSprite->setAnchorPoint({0.5, 1});
-    baseSprite->addChild(iconSprite);
+    // iconSprite->setPosition({baseSprite->getContentSize().width / 2, baseSprite->getContentSize().height});
+    // iconSprite->setAnchorPoint({0.5, 0.5});
+    // baseSprite->addChild(iconSprite);
+    baseSprite->addChildAtPosition(iconSprite, Anchor::Center, ccp(0, 0), false);
 
     if (gsm->isItemUnlocked(iconType, icon.second) && checkmark)
     {
@@ -578,11 +590,11 @@ void SecretRewardsListAlert::createItemLabeled(CCMenu *menu, std::pair<UnlockTyp
         }
 
         auto text = CCLabelBMFont::create(label, "goldFont.fnt");
-        text->setPosition({baseSprite->getContentSize().width / 2, 0.0f});
-        text->setAnchorPoint({0.5, 0});
         text->setScale(0.5f);
 
-        baseSprite->addChild(text);
+        // text->setPosition({baseSprite->getContentSize().width / 2, 0.0f});
+        // text->setAnchorPoint({0.5, 0});
+        baseSprite->addChildAtPosition(text, Anchor::Bottom, ccp(0, -3), false);
     }
 
     //  Creates the Icon as a button itself.

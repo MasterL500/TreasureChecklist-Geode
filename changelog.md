@@ -4,6 +4,8 @@
 
 * <cg>Added</c> extra <cp>Wraith</c> icon from Space Invaders event level.
 * <cg>Added</c> extra <cp>Wraith</c> icon from Random Gauntlet announcement.
+* <cg>Added</c> extra <cp>Wraith</c> icon from Funhouse event level.
+* <cy>Fixed</c> odd placement on Gold Key rewards.
 * <cy>Fixed</c> Unlocked items count.
 
 ### <cb>v1.6.0</c>
