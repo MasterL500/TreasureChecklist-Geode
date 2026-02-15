@@ -17,8 +17,11 @@ struct IconParameters : public CCObject
     }
 };
 
-bool SecretRewardsListAlert::setup()
+bool SecretRewardsListAlert::init()
 {
+    if (!Popup::init(450.f, 260.f))
+        return false;
+
     auto layerSize = m_mainLayer->getContentSize();
     auto showWraith = Mod::get()->getSettingValue<bool>("wraith-page");
     loadData();
@@ -84,10 +87,9 @@ bool SecretRewardsListAlert::setup()
 
     onNavButton(navMenu->getChildByTag(1));
 
-    //  this->m_noElasticity = true;
     this->setID("treasure-checklist-popup");
     return true;
-};
+}
 
 //  Loads the data the player has
 void SecretRewardsListAlert::loadData()
@@ -723,14 +725,14 @@ void SecretRewardsListAlert::onSettings(CCObject *sender)
 //  Create
 SecretRewardsListAlert *SecretRewardsListAlert::create()
 {
-    auto ret = new SecretRewardsListAlert();
+    auto ret = new SecretRewardsListAlert;
 
-    if (ret->initAnchored(450.f, 260.f))
+    if (ret->init())
     {
         ret->autorelease();
         return ret;
-    }
+    };
 
     delete ret;
     return nullptr;
-};
+}
