@@ -1,6 +1,10 @@
 # Changelog
 
-## <cg>v1.6.1 (Latest)</c>
+### <cg>v1.6.2</c> (Latest Version)
+
+* <co>Ported to Geode v5.0.0</c>
+
+### <cb>v1.6.1</c>
 
 * <cg>Added</c> extra <cp>Wraith</c> icon from Space Invaders event level.
 * <cg>Added</c> extra <cp>Wraith</c> icon from Random Gauntlet announcement.
@@ -69,4 +73,4 @@
 
 ## <cb>v1.0.0</c>
 
-* <cp>Initial version</c>
+* Initial Release.

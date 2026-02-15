@@ -1,28 +1,21 @@
 {
-	"geode": "4.8.0",
+	"geode": "5.0.0-beta.2",
 	"gd": {
-		"win": "2.2074",
-		"android": "2.2074",
-		"mac": "2.2074",
-		"ios": "2.2074"
+		"win": "2.2081",
+		"mac": "2.2081",
+		"ios": "2.2081",
+		"android": "2.2081"
 	},
 	"id": "ml5.treasure-checklist",
 	"name": "Treasure Checklist",
+	"version": "v1.6.2-beta.1",
+	"developer": "ML500",
 	"description": "Do you have the icon that you wanted?",
-	"version": "v1.6.1",
-	"developers": [
-		"ML500"
-	],
-	"links": {
-		"source": "https://github.com/MasterL500/TreasureChecklist-Geode",
-		"homepage": "https://ml500.carrd.co/",
-		"community": "https://discord.gg/tFUyJw5"
-	},
 	"dependencies": {
 		"geode.node-ids": "1.18.0",
 		"rynat.better_unlock_info": {
 			"version": "1.3.0",
-			"importance": "suggested"
+			"required": false
 		}
 	},
 	"settings": {
@@ -74,6 +67,11 @@
 		"sprites": [
 			"resources/*.png"
 		]
+	},
+	"links": {
+		"source": "https://github.com/MasterL500/TreasureChecklist-Geode",
+		"community": "https://discord.gg/tFUyJw5",
+		"homepage": "https://ml500.carrd.co/"
 	},
 	"tags": [
 		"interface",

@@ -5,19 +5,17 @@
 
 using namespace geode::prelude;
 
-// Garage Layer
+//	Garage Layer
 class $modify(GarageLayer, GJGarageLayer)
 {
 	bool init()
 	{
 		if (!GJGarageLayer::init())
 			return false;
-		auto garageButton = Mod::get()->getSettingValue<bool>("garage-button");
 
-		if (garageButton)
+		if (Mod::get()->getSettingValue<bool>("garage-button"))
 		{
 			NodeIDs::provideFor(this);
-
 			auto menu = this->getChildByID("shards-menu");
 
 			auto spr = CircleButtonSprite::createWithSpriteFrameName("chest_03_02_001.png", 1, CircleBaseColor::Gray, CircleBaseSize::Small);
@@ -47,6 +45,7 @@ class $modify(TreasureRoomLayer, SecretRewardsLayer)
 	{
 		if (!SecretRewardsLayer::init(p0))
 			return false;
+
 		auto winSize = CCDirector::sharedDirector()->getWinSize();
 
 		auto menu = CCMenu::create();
@@ -62,6 +61,7 @@ class $modify(TreasureRoomLayer, SecretRewardsLayer)
 
 		menu->addChild(button);
 		menu->updateLayout();
+
 		this->addChild(menu);
 		return true;
 	}
@@ -72,12 +72,14 @@ class $modify(TreasureRoomLayer, SecretRewardsLayer)
 	}
 };
 
-$on_mod(Loaded)
-{
-	listenForAllSettingChangesV3([](std::shared_ptr<SettingV3> setting)
-								 {
+$execute {
+	listenForAllSettingChanges([](const std::string_view key, std::shared_ptr<SettingV3> setting) {
+		//	Woop
+		log::debug("Setting: {} Changed", key);
+
 		if (auto rewardsList = static_cast<SecretRewardsListAlert*>(CCScene::get()->getChildByIDRecursive("treasure-checklist-popup")))
 		{
 			rewardsList->onNavButton(rewardsList->getChildByIDRecursive("navigation-menu")->getChildByTag(rewardsList->m_page));
-		} });
-}
+		}
+	});
+};
