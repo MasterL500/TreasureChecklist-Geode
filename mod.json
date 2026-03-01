@@ -1,5 +1,5 @@
 {
-	"geode": "5.0.0-beta.2",
+	"geode": "5.2.0",
 	"gd": {
 		"win": "2.2081",
 		"mac": "2.2081",
@@ -8,7 +8,7 @@
 	},
 	"id": "ml5.treasure-checklist",
 	"name": "Treasure Checklist",
-	"version": "v1.6.2-beta.1",
+	"version": "v1.6.2",
 	"developer": "ML500",
 	"description": "Do you have the icon that you wanted?",
 	"dependencies": {
@@ -73,10 +73,14 @@
 		"community": "https://discord.gg/tFUyJw5",
 		"homepage": "https://ml500.carrd.co/"
 	},
+	"issues": {
+		"info": "If you got any Bugs or Issues with the mod, please report it through the Github",
+		"url": "https://github.com/MasterL500/TreasureChecklist-Geode/issues"
+	},
 	"tags": [
-		"interface",
-		"utility",
 		"enhancement",
-		"offline"
+		"interface",
+		"offline",
+		"utility"
 	]
 }
