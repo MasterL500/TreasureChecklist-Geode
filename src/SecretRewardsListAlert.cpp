@@ -25,6 +25,7 @@ bool SecretRewardsListAlert::init()
     auto layerSize = m_mainLayer->getContentSize();
     auto showWraith = Mod::get()->getSettingValue<bool>("wraith-page");
     loadData();
+    loadWraithData();
 
     //  Background for the Icon Lists
     auto iconListBG = CCScale9Sprite::create("square02b_001.png", {0, 0, 80, 80});
@@ -89,6 +90,79 @@ bool SecretRewardsListAlert::init()
 
     this->setID("treasure-checklist-popup");
     return true;
+}
+
+void SecretRewardsListAlert::loadWraithData()
+{
+    auto req = web::WebRequest();
+
+    m_listener.spawn(
+        req.get("https://raw.githubusercontent.com/MasterL500/GD-Mods-Data/main/Wraith.json"),
+        [this](web::WebResponse res)
+        {
+            if (res.ok() && res.json().isOk())
+            {
+                auto rawData = res.json().unwrapOrDefault();
+
+                log::debug("Data Loaded");
+
+                m_fetchedData = rawData.as<std::vector<matjson::Value>>().unwrap();
+
+                getData();
+            }
+            else
+            {
+                log::error("Failed on loading data");
+            }
+        });
+};
+
+void SecretRewardsListAlert::getData()
+{
+    auto gsm = GameStatsManager::sharedState();
+    auto icons = gsm->m_wraithIcons;
+    std::vector<std::pair<gd::string, gd::string>> m_wraithData;
+
+    for (auto &data : m_fetchedData)
+    {
+        log::debug("Icon Type = {}", data["iconType"].asInt().unwrapOr(0));
+        log::debug("Icon ID = {}", data["iconID"].asInt().unwrapOr(0));
+        log::debug("Code = {}", data["code"].asString().unwrapOr(""));
+
+        auto iconType = static_cast<UnlockType>(data["iconType"].asInt().unwrapOr(0));
+        auto iconID = data["iconID"].asInt().unwrapOr(0);
+        auto iconCode = data["code"].asString().unwrapOr("");
+
+        auto test3 = std::make_pair(iconType, iconID);
+
+        if (utils::ranges::contains(icons, test3) && !utils::string::equalsIgnoreCase(iconCode, ""))
+        {
+            log::debug("Icon found");
+
+            auto test4 = fmt::format("{}_{}", (int)iconType, iconID);
+
+            m_wraithData.push_back({test4, iconCode});
+        }
+
+        log::debug("Icon checked");
+    }
+};
+
+gd::string SecretRewardsListAlert::getWraithCode(UnlockType type, int id)
+{
+    for (auto &data : m_fetchedData)
+    {
+        auto iconType = static_cast<UnlockType>(data["iconType"].asInt().unwrapOr(0));
+        auto iconID = data["iconID"].asInt().unwrapOr(0);
+        auto iconCode = data["code"].asString().unwrapOr("");
+
+        if (type == iconType && id == iconID && !utils::string::equalsIgnoreCase(iconCode, ""))
+        {
+            return iconCode;
+        }
+    }
+
+    return "????";
 }
 
 //  Loads the data the player has
@@ -175,6 +249,7 @@ void SecretRewardsListAlert::createIconPage(int ID, int index)
     auto showMiscRewards = Mod::get()->getSettingValue<bool>("misc-rewards");
     auto orderRewards = Mod::get()->getSettingValue<bool>("sorted-rewards");
     auto groupRewards = Mod::get()->getSettingValue<bool>("group-chests");
+    auto snitchCodes = Mod::get()->getSettingValue<bool>("wraith-codes");
 
     iconMenu->removeAllChildren();
     iconMenu->updateLayout();
@@ -356,19 +431,47 @@ void SecretRewardsListAlert::createIconPage(int ID, int index)
 
                     //  Random Gauntlet announcement Cube
                     if (chest[0].first == UnlockType::Cube && chest[0].second == 343)
-                        createItem(iconMenu, UnlockType::Cube, 321);
+                        if (snitchCodes)
+                        {
+                            createItemLabeled(iconMenu, {UnlockType::Cube, 321}, getWraithCode(UnlockType::Cube, 321).c_str());
+                        }
+                        else
+                        {
+                            createItem(iconMenu, UnlockType::Cube, 321);
+                        }
 
                     //  Random Gauntlet announcement Cube
                     if (chest[0].first == UnlockType::Cube && chest[0].second == 390)
-                        createItem(iconMenu, UnlockType::Cube, 351);
+                        if (snitchCodes)
+                        {
+                            createItemLabeled(iconMenu, {UnlockType::Cube, 351}, getWraithCode(UnlockType::Cube, 351).c_str());
+                        }
+                        else
+                        {
+                            createItem(iconMenu, UnlockType::Cube, 351);
+                        }
 
                     //  Space Invaders UFO
                     if (chest[0].first == UnlockType::Bird && chest[0].second == 63)
-                        createItem(iconMenu, UnlockType::Bird, 57);
+                        if (snitchCodes)
+                        {
+                            createItemLabeled(iconMenu, {UnlockType::Bird, 57}, getWraithCode(UnlockType::Bird, 57).c_str());
+                        }
+                        else
+                        {
+                            createItem(iconMenu, UnlockType::Bird, 57);
+                        }
 
                     //  GD Gangster Rap UFO
                     if (chest[0].first == UnlockType::Bird && chest[0].second == 116)
-                        createItem(iconMenu, UnlockType::Bird, 71);
+                        if (snitchCodes)
+                        {
+                            createItemLabeled(iconMenu, {UnlockType::Bird, 71}, getWraithCode(UnlockType::Bird, 71).c_str());
+                        }
+                        else
+                        {
+                            createItem(iconMenu, UnlockType::Bird, 71);
+                        }
 
                     //  Skips this icon because it's a duplicate
                     if (chest[0].first == UnlockType::Swing && chest[0].second == 68)
@@ -377,6 +480,13 @@ void SecretRewardsListAlert::createIconPage(int ID, int index)
                     //  Skips this icon because it's a duplicate
                     if (chest[0].first == UnlockType::Ball && chest[0].second == 50)
                         continue;
+
+                    if (snitchCodes)
+                        createItemLabeled(iconMenu, chest[0], getWraithCode(chest[0].first, chest[0].second).c_str());
+                    else
+                        createItem(iconMenu, chest[0].first, chest[0].second);
+
+                    continue;
                 }
 
                 createItem(iconMenu, chest[0].first, chest[0].second);
@@ -592,7 +702,8 @@ void SecretRewardsListAlert::createItemLabeled(CCMenu *menu, std::pair<UnlockTyp
         }
 
         auto text = CCLabelBMFont::create(label, "goldFont.fnt");
-        text->setScale(0.5f);
+        text->limitLabelWidth(50, 0.5f, 0.25f);
+        //text->setScale(0.5f);
 
         // text->setPosition({baseSprite->getContentSize().width / 2, 0.0f});
         // text->setAnchorPoint({0.5, 0});

@@ -8,7 +8,7 @@
 	},
 	"id": "ml5.treasure-checklist",
 	"name": "Treasure Checklist",
-	"version": "v1.6.2",
+	"version": "v1.7.0",
 	"developer": "ML500",
 	"description": "Do you have the icon that you wanted?",
 	"dependencies": {
@@ -61,7 +61,13 @@
 			"name": "Wraith's Rewards",
 			"description": "Adds an extra page with the icons you can get from <cp>The Wraith</c>.",
 			"default": true
-		}
+		},
+        "wraith-codes": {
+            "type" :"bool",
+            "name": "Spoil Codes",
+            "description": "Displays the code to obtain the icons from <cp>the Wraith</c>",
+            "default": true
+        }
 	},
 	"resources": {
 		"sprites": [

@@ -26,6 +26,13 @@ protected:
 
     void loadData();
 
+    TaskHolder<web::WebResponse> m_listener;
+    void loadWraithData();
+    void getData();
+
+    std::vector<matjson::Value> m_fetchedData;
+    gd::string getWraithCode(UnlockType type, int id);
+
 public:
     unsigned int m_page = 1;
 
