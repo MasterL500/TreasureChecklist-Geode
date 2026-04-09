@@ -1,10 +1,15 @@
 # Changelog
 
-### <cg>v1.6.2</c> (Latest Version)
+### <cg>v1.7.0</c> (Latest)
 
-* <co>Ported to Geode v5.4.0</c>
+* <cg>Added</c> online feature to get codes from the Wraith.
+* <cg>Added</c> setting if you want to display the codes mentioned above.
+* <cg>Added</c> setting if you want the mod button in the treasure room.
+* <cg>Added</c> pages format for the mod.
+* <cy>Revamped</c> settings section.
+* Internal code re-written a bit.
 
-### <cb>v1.6.2-beta.1</c>
+### <cb>v1.6.2</c>
 
 * <co>Ported to Geode v5.0.0</c>
 

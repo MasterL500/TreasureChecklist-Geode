@@ -6,7 +6,6 @@ bool SecretRewardsListAlert::init()
 		return false;
 
 	fetchWraithData();
-	loadStats();
 
 	//  Background
 	auto background = NineSlice::create("square02b_001.png", {0, 0, 80, 80});
@@ -14,25 +13,10 @@ bool SecretRewardsListAlert::init()
 	background->setColor({133, 68, 41});
 	m_mainLayer->addChildAtPosition(background, Anchor::Center, ccp(0, 2), false);
 
-	//  Info Stats
-	std::string info =
-		"<cj>1-Key:</c> " + std::to_string(m_chestCount[0]) + " out of " + std::to_string(m_chestTotal[0]) +
-		"\n<cj>5-Keys:</c> " + std::to_string(m_chestCount[1]) + " out of " + std::to_string(m_chestTotal[1]) +
-		"\n<cj>10-Keys:</c> " + std::to_string(m_chestCount[2]) + " out of " + std::to_string(m_chestTotal[2]) +
-		"\n<cg>25-Keys:</c> " + std::to_string(m_chestCount[3]) + " out of " + std::to_string(m_chestTotal[3]) +
-		"\n<cg>50-Keys:</c> " + std::to_string(m_chestCount[4]) + " out of " + std::to_string(m_chestTotal[4]) +
-		"\n<cg>100-Keys:</c> " + std::to_string(m_chestCount[5]) + " out of " + std::to_string(m_chestTotal[5]) +
-		"\n<cs>Gold Keys:</c> " + std::to_string(m_chestCount[6]) + " out of " + std::to_string(m_chestTotal[6]);
-
-	if (Mod::get()->getSettingValue<bool>("wraith-page"))
-	{
-		info += "\n<ca>Wraith's:</c> " + std::to_string(m_chestCount[7]) + " out of " + std::to_string(m_chestTotal[7]);
-	}
-
 	//  Info Button
-	auto infoButton = InfoAlertButton::create("Unlocked Items", info.c_str(), 1);
-	infoButton->setID("stats-button");
-	m_buttonMenu->addChildAtPosition(infoButton, Anchor::TopRight, ccp(-20, -20), false);
+	m_infoButton = InfoAlertButton::create("Unlocked Items", "", 1);
+	m_infoButton->setID("stats-button");
+	m_buttonMenu->addChildAtPosition(m_infoButton, Anchor::TopRight, ccp(-20, -20), false);
 
 	//  Navigation Menu
 	m_navMenu = CCMenu::create();
@@ -58,7 +42,7 @@ bool SecretRewardsListAlert::init()
 	m_pageMenu = CCMenu::create();
 	m_pageMenu->setContentSize(m_mainLayer->getContentSize());
 	m_pageMenu->setID("page-menu");
-	m_mainLayer->addChildAtPosition(m_pageMenu, Anchor::BottomLeft, ccp(0, 0), false);
+	this->m_mainLayer->addChildAtPosition(m_pageMenu, Anchor::BottomLeft, ccp(0, 0), false);
 
 	//  Page Navigation Buttons
 	m_prevBtn = CCMenuItemSpriteExtra::create(
@@ -115,13 +99,34 @@ void SecretRewardsListAlert::fetchWraithData()
 				auto rawData = res.json().unwrapOrDefault();
 				m_fetchedData = rawData.as<std::vector<matjson::Value>>().unwrap();
 				log::debug("Data Loaded");
+				loadExtraIcons();
 			}
 			else
 			{
 				Notification::create("There was an error fetching Wraith Codes", NotificationIcon::Error)->show();
 				log::error("Failed on loading data");
+				loadStats();
 			}
 		});
+}
+
+void SecretRewardsListAlert::loadExtraIcons()
+{
+	for (auto &data : m_fetchedData)
+	{
+		auto iconType = static_cast<UnlockType>(data["iconType"].asInt().unwrapOr(0));
+		auto iconID = data["iconID"].asInt().unwrapOr(0);
+		auto iconCode = data["iconCode"].asString().unwrapOr("");
+		auto isExtraIcon = data["noGameData"].asBool().unwrapOr(false);
+
+		if (isExtraIcon)
+		{
+			m_extraWraithIcons.insert({iconType, iconID});
+		}
+	}
+
+	log::debug("Extra Icons Loaded: {}", m_extraWraithIcons.size());
+	loadStats();
 }
 
 //  Returns the code of the current wrait icon (if it exists)
@@ -131,7 +136,7 @@ gd::string SecretRewardsListAlert::getWraithCode(UnlockType type, int id)
 	{
 		auto iconType = static_cast<UnlockType>(data["iconType"].asInt().unwrapOr(0));
 		auto iconID = data["iconID"].asInt().unwrapOr(0);
-		auto iconCode = data["code"].asString().unwrapOr("");
+		auto iconCode = data["iconCode"].asString().unwrapOr("");
 
 		if (type == iconType && id == iconID && !utils::string::equalsIgnoreCase(iconCode, ""))
 		{
@@ -164,6 +169,7 @@ void SecretRewardsListAlert::loadStats()
 				{
 					m_chestCount[chestID]++;
 				}
+
 				m_chestTotal[chestID]++;
 			}
 		}
@@ -186,25 +192,32 @@ void SecretRewardsListAlert::loadStats()
 		m_chestTotal[7]++;
 	}
 
-	//  Adds the icons without Wraith info into the count
-	//  Random Gauntlet announcement Cube
-	if (gsm->isItemUnlocked(UnlockType::Cube, 351))
-		m_chestCount[7]++;
+	for (auto const &icon : m_extraWraithIcons)
+	{
+		if (gsm->isItemUnlocked(icon.first, icon.second))
+		{
+			m_chestCount[7]++;
+		}
 
-	//  Funhouse Cube
-	if (gsm->isItemUnlocked(UnlockType::Cube, 321))
-		m_chestCount[7]++;
+		m_chestTotal[7]++;
+	}
 
-	//  Space Invaders UFO
-	if (gsm->isItemUnlocked(UnlockType::Bird, 57))
-		m_chestCount[7]++;
+	//  Info Stats
+	std::string info =
+		"<cj>1-Key:</c> " + std::to_string(m_chestCount[0]) + " out of " + std::to_string(m_chestTotal[0]) +
+		"\n<cj>5-Keys:</c> " + std::to_string(m_chestCount[1]) + " out of " + std::to_string(m_chestTotal[1]) +
+		"\n<cj>10-Keys:</c> " + std::to_string(m_chestCount[2]) + " out of " + std::to_string(m_chestTotal[2]) +
+		"\n<cg>25-Keys:</c> " + std::to_string(m_chestCount[3]) + " out of " + std::to_string(m_chestTotal[3]) +
+		"\n<cg>50-Keys:</c> " + std::to_string(m_chestCount[4]) + " out of " + std::to_string(m_chestTotal[4]) +
+		"\n<cg>100-Keys:</c> " + std::to_string(m_chestCount[5]) + " out of " + std::to_string(m_chestTotal[5]) +
+		"\n<cs>Gold Keys:</c> " + std::to_string(m_chestCount[6]) + " out of " + std::to_string(m_chestTotal[6]);
 
-	//  GD Gangster Rap UFO
-	if (gsm->isItemUnlocked(UnlockType::Bird, 71))
-		m_chestCount[7]++;
+	if (Mod::get()->getSettingValue<bool>("wraith-page"))
+	{
+		info += "\n<ca>Wraith's:</c> " + std::to_string(m_chestCount[7]) + " out of " + std::to_string(m_chestTotal[7]);
+	}
 
-	//  Adds the extra icons
-	m_chestTotal[7] += 4;
+	m_infoButton->m_description = info;
 }
 
 //  Returns if the unlock is a non-icon
@@ -290,6 +303,11 @@ void SecretRewardsListAlert::createIconPage(int ID, int page)
 		{
 			chestList.push_back({{icon.first, icon.second}});
 		}
+
+		for (auto const &icon : m_extraWraithIcons)
+		{
+			chestList.push_back({{icon.first, icon.second}});
+		}
 	}
 
 	if (ID != 6 || !orderRewards)
@@ -302,19 +320,19 @@ void SecretRewardsListAlert::createIconPage(int ID, int page)
 			{
 				std::sort(chest.begin(), chest.end(), [](const std::pair<UnlockType, int> &a, const std::pair<UnlockType, int> &b)
 						  {
-					auto aMisc = isExtraTypeSecret(a.first);
-					auto bMisc = isExtraTypeSecret(b.first);
-					return aMisc != bMisc ? aMisc < bMisc : a.first != b.first ? a.first < b.first : a.second < b.second; });
+                    auto aMisc = isExtraTypeSecret(a.first);
+                    auto bMisc = isExtraTypeSecret(b.first);
+                    return aMisc != bMisc ? aMisc < bMisc : a.first != b.first ? a.first < b.first : a.second < b.second; });
 			}
 		}
 
 		std::sort(chestList.begin(), chestList.end(), [](const std::vector<std::pair<UnlockType, int>> &av, const std::vector<std::pair<UnlockType, int>> &bv)
 				  {
-			auto &a = av[0];
-			auto &b = bv[0];
-			auto aMisc = isExtraTypeSecret(a.first);
-			auto bMisc = isExtraTypeSecret(b.first);
-			return aMisc != bMisc ? aMisc < bMisc : a.first != b.first ? a.first < b.first : a.second < b.second; });
+            auto &a = av[0];
+            auto &b = bv[0];
+            auto aMisc = isExtraTypeSecret(a.first);
+            auto bMisc = isExtraTypeSecret(b.first);
+            return aMisc != bMisc ? aMisc < bMisc : a.first != b.first ? a.first < b.first : a.second < b.second; });
 	}
 
 	//  Makes the format of the menu, based on the page
@@ -420,23 +438,6 @@ void SecretRewardsListAlert::createIconPage(int ID, int page)
 			{
 				if (ID == 7 && !snitchCodes)
 				{
-					//  I love it when Robtop adds icons without wraith information, so I gotta manually add them here.
-
-					//  Funhouse Cube
-					if (chest[0].first == UnlockType::Cube && chest[0].second == 343)
-						createItem({UnlockType::Cube, 321});
-
-					//  Random Gauntlet announcement Cube
-					if (chest[0].first == UnlockType::Cube && chest[0].second == 390)
-						createItem({UnlockType::Cube, 351});
-					//  Space Invaders UFO
-					if (chest[0].first == UnlockType::Bird && chest[0].second == 63)
-						createItem({UnlockType::Bird, 57});
-
-					//  GD Gangster Rap UFO
-					if (chest[0].first == UnlockType::Bird && chest[0].second == 116)
-						createItem({UnlockType::Bird, 71});
-
 					//  Skips this icon because it's a duplicate
 					if (chest[0].first == UnlockType::Swing && chest[0].second == 68)
 						continue;
@@ -453,38 +454,10 @@ void SecretRewardsListAlert::createIconPage(int ID, int page)
 						continue;
 					}
 
-					if (m_subPage == 1 && itemIndex <= maxToDivide)
+					if (m_subPage == 1 && itemIndex <= maxToDivide + 1)
 					{
 						itemIndex++;
 						continue;
-					}
-
-					//  Funhouse Cube
-					if (chest[0].first == UnlockType::Cube && chest[0].second == 343)
-					{
-						createItemLabeled({UnlockType::Cube, 321}, getWraithCode(UnlockType::Cube, 321).c_str(), true);
-						itemIndex++;
-					}
-
-					//  Random Gauntlet announcement Cube
-					if (chest[0].first == UnlockType::Cube && chest[0].second == 390)
-					{
-						createItemLabeled({UnlockType::Cube, 351}, getWraithCode(UnlockType::Cube, 351).c_str(), true);
-						itemIndex++;
-					}
-
-					//  Space Invaders UFO
-					if (chest[0].first == UnlockType::Bird && chest[0].second == 63)
-					{
-						createItemLabeled({UnlockType::Bird, 57}, getWraithCode(UnlockType::Bird, 57).c_str(), true);
-						itemIndex++;
-					}
-
-					//  GD Gangster Rap UFO
-					if (chest[0].first == UnlockType::Bird && chest[0].second == 116)
-					{
-						createItemLabeled({UnlockType::Bird, 71}, getWraithCode(UnlockType::Bird, 71).c_str(), true);
-						itemIndex++;
 					}
 
 					//  Skips this icon because it's a duplicate

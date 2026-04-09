@@ -19,6 +19,10 @@ protected:
 	CCMenuItemSpriteExtra *m_prevBtn = nullptr;
 	CCMenuItemSpriteExtra *m_nextBtn = nullptr;
 
+	InfoAlertButton *m_infoButton = nullptr;
+
+	gd::set<std::pair<UnlockType, int>> m_extraWraithIcons = {};
+
 	bool init();
 	void createItem(std::pair<UnlockType, int> icon);
 	void createItemGroup(std::vector<std::pair<UnlockType, int>> icons);
@@ -32,6 +36,7 @@ protected:
 	void onInfo(CCObject *);
 
 	void loadStats();
+	void loadExtraIcons();
 
 	//  Online Features (For Wraith codes)
 	TaskHolder<web::WebResponse> m_listener;
