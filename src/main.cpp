@@ -5,7 +5,7 @@
 
 using namespace geode::prelude;
 
-//	Garage Layer
+//	Garage Layer (Icon Kit)
 class $modify(GarageLayer, GJGarageLayer)
 {
 	bool init()
@@ -15,7 +15,6 @@ class $modify(GarageLayer, GJGarageLayer)
 
 		if (Mod::get()->getSettingValue<bool>("garage-button"))
 		{
-			NodeIDs::provideFor(this);
 			auto menu = this->getChildByID("shards-menu");
 
 			auto spr = CircleButtonSprite::createWithSpriteFrameName("chest_03_02_001.png", 1, CircleBaseColor::Gray, CircleBaseSize::Small);
@@ -46,23 +45,25 @@ class $modify(TreasureRoomLayer, SecretRewardsLayer)
 		if (!SecretRewardsLayer::init(p0))
 			return false;
 
-		auto winSize = CCDirector::sharedDirector()->getWinSize();
+		if (Mod::get()->getSettingValue<bool>("room-button"))
+		{
+			auto menu = CCMenu::create();
+			menu->setPosition({30.0f, 30.0f});
+			menu->setID("Treasure-Checklist-Menu");
+			menu->setZOrder(5);
 
-		auto menu = CCMenu::create();
-		menu->setPosition({30.0f, 30.0f});
-		menu->setID("Treasure-Checklist-Menu");
-		menu->setZOrder(5);
+			auto button = CCMenuItemSpriteExtra::create(
+				CCSpriteGrayscale::createWithSpriteFrameName("GJ_infoIcon_001.png"),
+				this,
+				menu_selector(TreasureRoomLayer::onChestButton));
+			button->setID("Treasure-Checklist-Button");
 
-		auto button = CCMenuItemSpriteExtra::create(
-			CCSprite::create("TC_ModInfoIcon.png"_spr),
-			this,
-			menu_selector(TreasureRoomLayer::onChestButton));
-		button->setID("Treasure-Checklist-Button");
+			menu->addChild(button);
+			menu->updateLayout();
 
-		menu->addChild(button);
-		menu->updateLayout();
+			this->addChild(menu);
+		}
 
-		this->addChild(menu);
 		return true;
 	}
 
@@ -72,14 +73,11 @@ class $modify(TreasureRoomLayer, SecretRewardsLayer)
 	}
 };
 
-$execute {
-	listenForAllSettingChanges([](const std::string_view key, std::shared_ptr<SettingV3> setting) {
-		//	Woop
-		log::debug("Setting: {} Changed", key);
-
-		if (auto rewardsList = static_cast<SecretRewardsListAlert*>(CCScene::get()->getChildByIDRecursive("treasure-checklist-popup")))
-		{
-			rewardsList->onNavButton(rewardsList->getChildByIDRecursive("navigation-menu")->getChildByTag(rewardsList->m_page));
-		}
-	});
+$execute
+{
+	listenForAllSettingChanges([](const std::string_view key, std::shared_ptr<SettingV3> setting)
+							   {
+			if (auto rewardsList = static_cast<SecretRewardsListAlert *>(CCScene::get()->getChildByIDRecursive("Treasure-Checklist-Popup"))){
+				rewardsList->onNavButton(rewardsList->getChildByIDRecursive("navigation-menu")->getChildByTag(rewardsList->m_page));
+			} });
 };

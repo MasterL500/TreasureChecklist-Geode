@@ -1,86 +1,99 @@
 {
-	"geode": "5.4.1",
-	"gd": {
-		"win": "2.2081",
-		"mac": "2.2081",
-		"ios": "2.2081",
-		"android": "2.2081"
-	},
-	"id": "ml5.treasure-checklist",
-	"name": "Treasure Checklist",
-	"version": "v1.6.2",
-	"developer": "ML500",
-	"description": "Do you have the icon that you wanted?",
-	"dependencies": {
-		"geode.node-ids": "1.18.0",
-		"rynat.better_unlock_info": {
-			"version": "1.3.0",
-			"required": false
-		}
-	},
-	"settings": {
-		"main-settings": {
-			"type": "title",
-			"name": "Main Settings"
-		},
-		"garage-button": {
-			"type": "bool",
-			"name": "Icon Kit Button",
-			"default": true
-		},
-		"display-checkmark": {
-			"type": "bool",
-			"name": "Display Checkmarks",
-			"default": true
-		},
-		"misc-rewards": {
-			"type": "bool",
-			"name": "Misc. Rewards",
-			"description": "Displays <cy>colors</c> and <co>death effects</c>.",
-			"default": true
-		},
-		"group-chests": {
-			"type": "bool",
-			"name": "Group Tier II Rewards",
-			"description": "Rewards from <cg>Tier II Chests</c> (25, 50 and 100 Keys) are grouped together.",
-			"default": true
-		},
-		"sorted-rewards": {
-			"type": "bool",
-			"name": "Sort Golden Key rewards",
-			"description": "Displays the rewards from <cy>Golden Key Chests</c> in their settled order.",
-			"default": true
-		},
-		"experimental-segment": {
-			"type": "title",
-			"name": "Other features",
-			"description": "Experimental features, prone to bugs or changes."
-		},
-		"wraith-page": {
-			"type": "bool",
-			"name": "Wraith's Rewards",
-			"description": "Adds an extra page with the icons you can get from <cp>The Wraith</c>.",
-			"default": true
-		}
-	},
-	"resources": {
-		"sprites": [
-			"resources/*.png"
-		]
-	},
-	"links": {
-		"source": "https://github.com/MasterL500/TreasureChecklist-Geode",
-		"community": "https://discord.gg/tFUyJw5",
-		"homepage": "https://ml500.carrd.co/"
-	},
-	"issues": {
-		"info": "If you got any Bugs or Issues with the mod, please report it through the Github",
-		"url": "https://github.com/MasterL500/TreasureChecklist-Geode/issues"
-	},
-	"tags": [
-		"enhancement",
-		"interface",
-		"offline",
-		"utility"
-	]
+    "geode": "5.5.3",
+    "gd": {
+        "win": "2.2081",
+        "mac": "2.2081",
+        "ios": "2.2081",
+        "android": "2.2081"
+    },
+    "id": "ml5.treasure-checklist",
+    "name": "Treasure Checklist",
+    "version": "v1.7.0",
+    "developer": "ML500",
+    "description": "Do you have the icon that you wanted?",
+    "dependencies": {
+        "geode.node-ids": "1.20.0"
+    },
+    "settings": {
+        "main-settings": {
+            "type": "title",
+            "name": "Main Settings"
+        },
+        "display-checkmark": {
+            "type": "bool",
+            "name": "Display Checkmarks",
+            "default": true
+        },
+        "misc-rewards": {
+            "type": "bool",
+            "name": "Misc. Rewards",
+            "description": "Displays <cy>colors</c> and <co>death effects</c>.",
+            "default": true
+        },
+        "group-chests": {
+            "type": "bool",
+            "name": "Group Tier II Rewards",
+            "description": "Rewards from <cg>Tier II Chests</c> (25, 50 and 100 Keys) are grouped together.",
+            "default": true
+        },
+        "sorted-rewards": {
+            "type": "bool",
+            "name": "Sort Golden Key rewards",
+            "description": "Displays the rewards from <cy>Golden Key Chests</c> in their settled order.",
+            "default": true
+        },
+        "button-settings": {
+            "type": "title",
+            "name": "Button Locations"
+        },
+        "garage-button": {
+            "type": "bool",
+            "name": "Icon Kit Button",
+            "description": "Whenever you want the button of the mod inside the <cy>Icon Kit</c>.",
+            "default": true
+        },
+        "room-button": {
+            "type": "bool",
+            "name": "Treasure Room Button",
+            "description": "Whenever you want the button of the mod at the bottom left corner of <cy>The Treasure Room</c>.",
+            "default": true
+        },
+        "experimental-segment": {
+            "type": "title",
+            "name": "Other features"
+        },
+        "wraith-page": {
+            "type": "bool",
+            "name": "Wraith's Rewards",
+            "description": "Adds an extra page with the icons you can get from <cp>the Wraith</c>.\n***\n<cc>Technically the Wraith isn't part of the Treasure room, but it's added here to make things easier</c>.",
+            "default": true
+        },
+        "wraith-codes": {
+            "type": "bool",
+            "name": "Spoil Codes",
+            "description": "Displays the code to obtain the icons from <cp>the Wraith</c>.\n***\n<cc>The mod fetches the codes online, only when this feature is enabled. You're free to disable this feature if used offline</c>.",
+            "default": true
+        }
+    },
+    "resources": {
+        "sprites": [
+            "resources/*.png"
+        ]
+    },
+    "links": {
+        "source": "https://github.com/MasterL500/TreasureChecklist-Geode",
+        "community": "https://discord.gg/tFUyJw5",
+        "homepage": "https://ml500.carrd.co/"
+    },
+    "issues": {
+        "info": "If you got any Bugs or Issues with the mod, please report it through the Github",
+        "url": "https://github.com/MasterL500/TreasureChecklist-Geode/issues"
+    },
+    "tags": [
+        "enhancement",
+        "interface",
+        "offline",
+        "online",
+        "utility"
+    ]
 }
