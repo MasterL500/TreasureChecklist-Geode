@@ -2,6 +2,10 @@
 
 ### <cg>v1.6.2</c> (Latest Version)
 
+* <co>Ported to Geode v5.4.0</c>
+
+### <cb>v1.6.2-beta.1</c>
+
 * <co>Ported to Geode v5.0.0</c>
 
 ### <cb>v1.6.1</c>
