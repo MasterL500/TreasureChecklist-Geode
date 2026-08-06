@@ -320,19 +320,19 @@ void SecretRewardsListAlert::createIconPage(int ID, int page)
 			{
 				std::sort(chest.begin(), chest.end(), [](const std::pair<UnlockType, int> &a, const std::pair<UnlockType, int> &b)
 						  {
-                    auto aMisc = isExtraTypeSecret(a.first);
-                    auto bMisc = isExtraTypeSecret(b.first);
-                    return aMisc != bMisc ? aMisc < bMisc : a.first != b.first ? a.first < b.first : a.second < b.second; });
+					auto aMisc = isExtraTypeSecret(a.first);
+					auto bMisc = isExtraTypeSecret(b.first);
+					return aMisc != bMisc ? aMisc < bMisc : a.first != b.first ? a.first < b.first : a.second < b.second; });
 			}
 		}
 
 		std::sort(chestList.begin(), chestList.end(), [](const std::vector<std::pair<UnlockType, int>> &av, const std::vector<std::pair<UnlockType, int>> &bv)
 				  {
-            auto &a = av[0];
-            auto &b = bv[0];
-            auto aMisc = isExtraTypeSecret(a.first);
-            auto bMisc = isExtraTypeSecret(b.first);
-            return aMisc != bMisc ? aMisc < bMisc : a.first != b.first ? a.first < b.first : a.second < b.second; });
+			auto &a = av[0];
+			auto &b = bv[0];
+			auto aMisc = isExtraTypeSecret(a.first);
+			auto bMisc = isExtraTypeSecret(b.first);
+			return aMisc != bMisc ? aMisc < bMisc : a.first != b.first ? a.first < b.first : a.second < b.second; });
 	}
 
 	//  Makes the format of the menu, based on the page
