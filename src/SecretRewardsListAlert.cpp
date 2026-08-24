@@ -1,5 +1,8 @@
 #include "SecretRewardsListAlert.hpp"
 
+const int MAX_PAGE = 2;
+const int MAX_PER_PAGE = 18;
+
 bool SecretRewardsListAlert::init()
 {
 	if (!Popup::init(450.f, 260.f))
@@ -51,7 +54,7 @@ bool SecretRewardsListAlert::init()
 		menu_selector(SecretRewardsListAlert::onPageButton));
 	m_prevBtn->setID("prev-page-button");
 	m_prevBtn->setVisible(false);
-	m_prevBtn->setTag(0);
+	m_prevBtn->setTag(-1);
 
 	auto nextSpr = CCSprite::createWithSpriteFrameName("GJ_arrow_01_001.png");
 	nextSpr->setFlipX(true);
@@ -448,13 +451,20 @@ void SecretRewardsListAlert::createIconPage(int ID, int page)
 				}
 				else if (ID == 7 && snitchCodes)
 				{
-					if (m_subPage == 0 && itemIndex > maxToDivide)
+					//	I know there's a better way, just my brain couldn't work it out.
+					if (m_subPage == 0 && itemIndex > MAX_PER_PAGE)
 					{
 						itemIndex++;
 						continue;
 					}
 
-					if (m_subPage == 1 && itemIndex <= maxToDivide + 1)
+					if (m_subPage == 1 && ((itemIndex <= MAX_PER_PAGE) || (itemIndex > MAX_PER_PAGE * 2)))
+					{
+						itemIndex++;
+						continue;
+					}
+
+					else if (m_subPage == 2 && itemIndex <= (MAX_PER_PAGE * 2) + 2)
 					{
 						itemIndex++;
 						continue;
@@ -770,10 +780,10 @@ void SecretRewardsListAlert::createItemGroup(std::vector<std::pair<UnlockType, i
 void SecretRewardsListAlert::onPageButton(CCObject *sender)
 {
 	auto tag = sender->getTag();
-	m_subPage = tag;
+	m_subPage += sender->getTag();
 
-	m_prevBtn->setVisible(tag == 1);
-	m_nextBtn->setVisible(tag == 0);
+	m_prevBtn->setVisible(m_subPage != 0);
+	m_nextBtn->setVisible(m_subPage != MAX_PAGE);
 
 	m_iconMenu->removeAllChildren();
 	m_iconMenu->updateLayout();
