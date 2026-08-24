@@ -1,6 +1,10 @@
 # Changelog
 
-### <cg>v1.7.0</c> (Latest)
+### <cg>v1.7.1</c> (Latest)
+
+* <cy>Fixed</c> Wraith Rewards placement.
+
+### <cb>v1.7.0</c>
 
 * <cg>Added</c> online feature to get codes from the Wraith.
 * <cg>Added</c> setting if you want to display the codes mentioned above.
