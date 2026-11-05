@@ -8,7 +8,7 @@ bool SecretRewardsListAlert::init()
 	if (!Popup::init(450.f, 260.f))
 		return false;
 
-	fetchWraithData();
+	//	fetchWraithData();
 
 	//  Background
 	auto background = NineSlice::create("square02b_001.png", {0, 0, 80, 80});
@@ -133,7 +133,7 @@ void SecretRewardsListAlert::loadExtraIcons()
 }
 
 //  Returns the code of the current wrait icon (if it exists)
-gd::string SecretRewardsListAlert::getWraithCode(UnlockType type, int id)
+std::string SecretRewardsListAlert::getWraithCode(UnlockType type, int id)
 {
 	for (auto &data : m_fetchedData)
 	{
@@ -382,13 +382,14 @@ void SecretRewardsListAlert::createIconPage(int ID, int page)
 		if (orderRewards)
 		{
 			m_iconMenu->setLayout(RowLayout::create()
-									  ->setGap(10.0f)
+									  ->setGap(0.0f)
 									  ->setAutoScale(false)
 									  ->setGrowCrossAxis(true)
 									  ->setCrossAxisOverflow(false)
+									  ->setAxisAlignment(AxisAlignment::Between)
 									  ->setCrossAxisAlignment(AxisAlignment::Between)
 									  ->setCrossAxisLineAlignment(AxisAlignment::Even));
-			m_iconMenu->setContentSize({480.f, 210.f});
+			m_iconMenu->setContentSize({530.f, 210.f});
 		}
 		break;
 
@@ -547,7 +548,7 @@ void SecretRewardsListAlert::onNavButton(CCObject *sender)
 	m_page = tag;
 
 	//  Sprite List
-	std::vector<const char *> pageTitles = {
+	std::vector<std::string> pageTitles = {
 		"Rewards (1 Key chests)",
 		"Rewards (5 Key chests)",
 		"Rewards (10 Key chests)",
@@ -612,7 +613,7 @@ void SecretRewardsListAlert::createItem(std::pair<UnlockType, int> icon)
 		if (icon.first == UnlockType::Col1 || icon.first == UnlockType::Col2)
 		{
 			auto colorNum = (icon.first == UnlockType::Col1) ? "1" : "2";
-			auto colorLabel = CCLabelBMFont::create(colorNum, "bigFont.fnt");
+			auto colorLabel = geode::Label::create(colorNum, "bigFont.fnt");
 			colorLabel->setPosition(iconSpr->getContentSize() / 2);
 			colorLabel->setScale(0.5f);
 
@@ -627,7 +628,9 @@ void SecretRewardsListAlert::createItem(std::pair<UnlockType, int> icon)
 		menu_selector(SecretRewardsListAlert::onIcon));
 
 	//	Passes the user-defined IconParameters for its callback
-	iconButton->setUserObject("icon-parameters"_spr, new IconParameters(icon.first, icon.second, m_iconMenu->getTag()));
+	//	* GEODE V6 EDIT: Causes crash when called.
+	//	iconButton->setUserObject("icon-parameters"_spr, new IconParameters(icon.first, icon.second, m_iconMenu->getTag()));
+
 	m_iconMenu->addChild(iconButton);
 	m_iconMenu->updateLayout();
 }
@@ -664,14 +667,14 @@ void SecretRewardsListAlert::createItemLabeled(std::pair<UnlockType, int> icon, 
 		if (icon.first == UnlockType::Col1 || icon.first == UnlockType::Col2)
 		{
 			auto colorNum = (icon.first == UnlockType::Col1) ? "1" : "2";
-			auto colorLabel = CCLabelBMFont::create(colorNum, "bigFont.fnt");
+			auto colorLabel = geode::Label::create(colorNum, "bigFont.fnt");
 			colorLabel->setPosition(iconSpr->getContentSize() / 2);
 			colorLabel->setScale(0.5f);
 
 			iconSpr->addChild(colorLabel);
 		}
 
-		auto label = TextArea::create(text, "goldFont.fnt", 1.f, 200, {0.5, 1}, 20.f, false);
+		auto label = TextArea::create(text, "goldFont.fnt", 1.f, 200, {0.5, 1}, 20.f, false, 1);
 		label->setScale(0.5f);
 
 		if (isCode)
@@ -696,7 +699,8 @@ void SecretRewardsListAlert::createItemLabeled(std::pair<UnlockType, int> icon, 
 	}
 
 	//	Passes the user-defined IconParameters for its callback
-	iconButton->setUserObject("icon-parameters"_spr, new IconParameters(icon.first, icon.second, m_iconMenu->getTag()));
+	//	* GEODE V6 EDIT: Causes crash when called.
+	//	iconButton->setUserObject("icon-parameters"_spr, new IconParameters(icon.first, icon.second, m_iconMenu->getTag()));
 
 	m_iconMenu->addChild(iconButton);
 	m_iconMenu->updateLayout();
@@ -743,7 +747,7 @@ void SecretRewardsListAlert::createItemGroup(std::vector<std::pair<UnlockType, i
 		{
 			if (iconType == UnlockType::Col1 || iconType == UnlockType::Col2)
 			{
-				auto colorType = (iconType == UnlockType::Col1) ? CCLabelBMFont::create("1", "bigFont.fnt") : CCLabelBMFont::create("2", "bigFont.fnt");
+				auto colorType = (iconType == UnlockType::Col1) ? geode::Label::create("1", "bigFont.fnt") : geode::Label::create("2", "bigFont.fnt");
 				colorType->setPosition(iconSpr->getContentSize() / 2);
 				colorType->setScale(0.5f);
 
@@ -758,7 +762,8 @@ void SecretRewardsListAlert::createItemGroup(std::vector<std::pair<UnlockType, i
 			menu_selector(SecretRewardsListAlert::onIcon));
 
 		//	Passes the user-defined IconParameters for its callback
-		iconButton->setUserObject("icon-parameters"_spr, new IconParameters(iconType, iconID, m_iconMenu->getTag()));
+		//	* GEODE V6 EDIT: Causes crash when called.
+		//	iconButton->setUserObject("icon-parameters"_spr, new IconParameters(iconType, iconID, m_iconMenu->getTag()));
 
 		auxMenu->addChild(iconButton);
 		auxMenu->updateLayout();
@@ -794,6 +799,9 @@ void SecretRewardsListAlert::onPageButton(CCObject *sender)
 //	When a specific Icon Button is pressed
 void SecretRewardsListAlert::onIcon(CCObject *sender)
 {
+	//	GEODE V6 EDIT: Temporally disabled because Parameters are broken.
+	return;
+
 	auto parameters = static_cast<IconParameters *>(
 		static_cast<CCNode *>(sender)->getUserObject("icon-parameters"_spr));
 

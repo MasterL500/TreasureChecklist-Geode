@@ -21,7 +21,7 @@ protected:
 
 	InfoAlertButton *m_infoButton = nullptr;
 
-	gd::set<std::pair<UnlockType, int>> m_extraWraithIcons = {};
+	std::set<std::pair<UnlockType, int>> m_extraWraithIcons = {};
 
 	bool init();
 	void createItem(std::pair<UnlockType, int> icon);
@@ -43,7 +43,7 @@ protected:
 	void fetchWraithData();
 
 	std::vector<matjson::Value> m_fetchedData;
-	gd::string getWraithCode(UnlockType type, int id);
+	std::string getWraithCode(UnlockType type, int id);
 
 public:
 	unsigned int m_page = 0;
