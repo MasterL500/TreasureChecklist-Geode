@@ -8,7 +8,7 @@ bool SecretRewardsListAlert::init()
 	if (!Popup::init(450.f, 260.f))
 		return false;
 
-	//	fetchWraithData();
+	fetchWraithData();
 
 	//  Background
 	auto background = NineSlice::create("square02b_001.png", {0, 0, 80, 80});
@@ -532,7 +532,7 @@ void SecretRewardsListAlert::createNavButton(int tag, bool active)
 //  When a Navigation Button is pressed
 void SecretRewardsListAlert::onNavButton(CCObject *sender)
 {
-	//  Notification::create(fmt::format("Button {} Pressed", sender->getTag() + 1), NotificationIcon::Info, 0.5f)->show();
+	//	Notification::create(fmt::format("Button {} Pressed", sender->getTag() + 1), NotificationIcon::Info, 0.5f)->show();
 	auto showWraith = Mod::get()->getSettingValue<bool>("wraith-page");
 	auto tag = sender->getTag();
 
@@ -557,8 +557,9 @@ void SecretRewardsListAlert::onNavButton(CCObject *sender)
 		"Rewards (100 Key chests)",
 		"Rewards (Golden Chests)",
 		"Rewards (Wraith's Vault)"};
+		
 	this->setTitle(pageTitles[tag]);
-
+ 
 	//  Updates the sprite of the button of the previous page
 	if (auto oldNavButton = static_cast<CCMenuItemSpriteExtra *>(m_navMenu->getChildByTag(oldPage)))
 	{
@@ -592,6 +593,8 @@ void SecretRewardsListAlert::onNavButton(CCObject *sender)
 //  Creates an Item
 void SecretRewardsListAlert::createItem(std::pair<UnlockType, int> icon)
 {
+	log::debug("Create Item");
+
 	auto checkmark = Mod::get()->getSettingValue<bool>("display-checkmark");
 	auto gsm = GameStatsManager::sharedState();
 
@@ -628,8 +631,7 @@ void SecretRewardsListAlert::createItem(std::pair<UnlockType, int> icon)
 		menu_selector(SecretRewardsListAlert::onIcon));
 
 	//	Passes the user-defined IconParameters for its callback
-	//	* GEODE V6 EDIT: Causes crash when called.
-	//	iconButton->setUserObject("icon-parameters"_spr, new IconParameters(icon.first, icon.second, m_iconMenu->getTag()));
+	iconButton->setUserObject("icon-parameters"_spr, new IconParameters(icon.first, icon.second, m_iconMenu->getTag()));
 
 	m_iconMenu->addChild(iconButton);
 	m_iconMenu->updateLayout();
@@ -699,8 +701,7 @@ void SecretRewardsListAlert::createItemLabeled(std::pair<UnlockType, int> icon, 
 	}
 
 	//	Passes the user-defined IconParameters for its callback
-	//	* GEODE V6 EDIT: Causes crash when called.
-	//	iconButton->setUserObject("icon-parameters"_spr, new IconParameters(icon.first, icon.second, m_iconMenu->getTag()));
+	iconButton->setUserObject("icon-parameters"_spr, new IconParameters(icon.first, icon.second, m_iconMenu->getTag()));
 
 	m_iconMenu->addChild(iconButton);
 	m_iconMenu->updateLayout();
@@ -762,8 +763,7 @@ void SecretRewardsListAlert::createItemGroup(std::vector<std::pair<UnlockType, i
 			menu_selector(SecretRewardsListAlert::onIcon));
 
 		//	Passes the user-defined IconParameters for its callback
-		//	* GEODE V6 EDIT: Causes crash when called.
-		//	iconButton->setUserObject("icon-parameters"_spr, new IconParameters(iconType, iconID, m_iconMenu->getTag()));
+		iconButton->setUserObject("icon-parameters"_spr, new IconParameters(iconType, iconID, m_iconMenu->getTag()));
 
 		auxMenu->addChild(iconButton);
 		auxMenu->updateLayout();
@@ -799,9 +799,6 @@ void SecretRewardsListAlert::onPageButton(CCObject *sender)
 //	When a specific Icon Button is pressed
 void SecretRewardsListAlert::onIcon(CCObject *sender)
 {
-	//	GEODE V6 EDIT: Temporally disabled because Parameters are broken.
-	return;
-
 	auto parameters = static_cast<IconParameters *>(
 		static_cast<CCNode *>(sender)->getUserObject("icon-parameters"_spr));
 

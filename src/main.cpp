@@ -73,15 +73,11 @@ class $modify(TreasureRoomLayer, SecretRewardsLayer)
 	}
 };
 
-/*
-* GEODE V6 EDIT: Temporally disabled because it causes crashes.
-
 $execute
 {
-listenForAllSettingChanges([](const std::string_view key, std::shared_ptr<SettingV3> setting)
-{
-	if (auto rewardsList = static_cast<SecretRewardsListAlert *>(CCScene::get()->getChildByIDRecursive("Treasure-Checklist-Popup"))){
+	listenForAllSettingChanges([](const std::string_view key, std::shared_ptr<SettingV3> setting)
+							   {
+	if (auto rewardsList = static_cast<SecretRewardsListAlert *>(CCScene::get()->getChildByIDRecursive("treasure-checklist-popup"))){
 		rewardsList->onNavButton(rewardsList->getChildByIDRecursive("navigation-menu")->getChildByTag(rewardsList->m_page));
 	} });
 };
-*/

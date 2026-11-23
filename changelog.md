@@ -1,6 +1,12 @@
 # Changelog
 
-### <cg>v1.7.1</c> (Latest)
+### <cg>v1.8.0</c> (Latest)
+
+* <co>Ported to Geometry Dash 2.209</c>
+* <cg>Added</c> Golden chest rewards 21 to 30.
+* <cy>Fixed</c> Wraith rewards page bug.
+
+### <cb>v1.7.1</c>
 
 * <cy>Fixed</c> Wraith Rewards placement.
 
