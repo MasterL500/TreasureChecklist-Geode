@@ -77,7 +77,7 @@ $execute
 {
 	listenForAllSettingChanges([](const std::string_view key, std::shared_ptr<SettingV3> setting)
 							   {
-			if (auto rewardsList = static_cast<SecretRewardsListAlert *>(CCScene::get()->getChildByIDRecursive("Treasure-Checklist-Popup"))){
-				rewardsList->onNavButton(rewardsList->getChildByIDRecursive("navigation-menu")->getChildByTag(rewardsList->m_page));
-			} });
+	if (auto rewardsList = static_cast<SecretRewardsListAlert *>(CCScene::get()->getChildByIDRecursive("treasure-checklist-popup"))){
+		rewardsList->onNavButton(rewardsList->getChildByIDRecursive("navigation-menu")->getChildByTag(rewardsList->m_page));
+	} });
 };
